@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Apply for Loan — NexaBank</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{--bg:#0f0b1e;--purple:#8b5cf6;--indigo:#6366f1;--pink:#ec4899;--border:rgba(139,92,246,.2);--b2:rgba(139,92,246,.35);--text:#e8e0ff;--muted:#7a6aa0;--card:rgba(255,255,255,.04);}
+html,body{min-height:100%;}
+body{background:var(--bg);color:var(--text);font-family:'Nunito',sans-serif;}
+body::before{content:'';position:fixed;top:-200px;left:50%;transform:translateX(-50%);width:800px;height:600px;background:radial-gradient(ellipse,rgba(99,102,241,.12) 0%,transparent 70%);pointer-events:none;}
+body::after{content:'';position:fixed;bottom:-100px;right:-100px;width:400px;height:400px;background:radial-gradient(circle,rgba(139,92,246,.08),transparent 70%);pointer-events:none;}
+/* NAV */
+nav{display:flex;align-items:center;justify-content:space-between;padding:1rem 2rem;border-bottom:1px solid var(--border);background:rgba(15,11,30,.8);backdrop-filter:blur(16px);position:sticky;top:0;z-index:100;}
+.brand{font-weight:800;font-size:1.15rem;color:var(--purple);text-decoration:none;letter-spacing:-.3px;}
+.brand span{color:var(--indigo);}
+.nav-links{display:flex;gap:.125rem;}
+.nl{padding:.4rem .75rem;border-radius:8px;color:var(--muted);text-decoration:none;font-size:.8rem;font-weight:600;transition:all .2s;}
+.nl:hover,.nl.active{color:var(--text);background:rgba(139,92,246,.1);}
+.nav-logout{background:none;border:1px solid var(--border);color:var(--muted);padding:.4rem .875rem;border-radius:8px;font-family:'Nunito',sans-serif;font-size:.8rem;cursor:pointer;transition:all .2s;}
+.nav-logout:hover{border-color:var(--pink);color:var(--pink);}
+/* PAGE */
+.page{max-width:640px;margin:2.5rem auto;padding:0 1.5rem;}
+.back{display:inline-flex;align-items:center;gap:.5rem;color:var(--muted);text-decoration:none;font-size:.825rem;margin-bottom:1.5rem;transition:color .2s;}
+.back:hover{color:var(--purple);}
+/* GLASS CARD */
+.glass-card{background:var(--card);border:1px solid var(--border);border-radius:24px;padding:2.5rem;backdrop-filter:blur(20px);box-shadow:0 20px 60px rgba(0,0,0,.3),inset 0 1px 0 rgba(255,255,255,.06);}
+.card-top{margin-bottom:2rem;}
+.card-icon{width:52px;height:52px;border-radius:16px;background:linear-gradient(135deg,var(--purple),var(--indigo));display:flex;align-items:center;justify-content:center;font-size:1.3rem;margin-bottom:1rem;box-shadow:0 8px 24px rgba(139,92,246,.3);}
+h1{font-size:1.75rem;font-weight:800;letter-spacing:-.5px;margin-bottom:.3rem;}
+.card-sub{color:var(--muted);font-size:.875rem;}
+/* EMI BOX */
+.emi-box{background:linear-gradient(135deg,rgba(139,92,246,.15),rgba(99,102,241,.1));border:1px solid var(--b2);border-radius:16px;padding:1.25rem 1.5rem;margin-bottom:1.75rem;display:none;}
+.emi-box.visible{display:block;}
+.emi-box-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:1rem;}
+.emi-label{font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--purple);margin-bottom:.3rem;}
+.emi-value{font-family:'Space Mono',monospace;font-size:2rem;font-weight:700;color:white;}
+.emi-period{font-size:.72rem;color:var(--muted);}
+.emi-details{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.875rem;}
+.emi-detail{background:rgba(0,0,0,.2);border-radius:10px;padding:.625rem .875rem;}
+.ed-label{font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:.25rem;}
+.ed-value{font-family:'Space Mono',monospace;font-size:.82rem;color:var(--text);}
+/* FORM */
+.form-group{margin-bottom:1.25rem;}
+label{display:block;font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:.45rem;}
+select,input{width:100%;padding:.875rem 1rem;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:12px;color:var(--text);font-family:'Nunito',sans-serif;font-size:.9rem;outline:none;transition:all .25s;}
+select:focus,input:focus{border-color:var(--purple);background:rgba(139,92,246,.06);box-shadow:0 0 0 3px rgba(139,92,246,.12);}
+select option{background:#1a1430;}
+input::placeholder{color:rgba(122,106,160,.5);}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+/* LOAN TYPES */
+.loan-types{display:grid;grid-template-columns:repeat(4,1fr);gap:.625rem;margin-bottom:1.25rem;}
+.lt-card{border:1px solid var(--border);border-radius:12px;padding:.75rem .5rem;text-align:center;cursor:pointer;transition:all .2s;}
+.lt-card:hover{border-color:var(--purple);background:rgba(139,92,246,.08);}
+.lt-card.selected{border-color:var(--purple);background:rgba(139,92,246,.12);}
+.lt-card input[type=radio]{display:none;}
+.lt-icon{font-size:1.3rem;margin-bottom:.35rem;}
+.lt-name{font-size:.68rem;font-weight:700;color:var(--muted);}
+/* SUBMIT */
+.submit-btn{width:100%;padding:1rem;border:none;border-radius:14px;background:linear-gradient(135deg,var(--purple),var(--indigo));color:white;font-family:'Nunito',sans-serif;font-size:.95rem;font-weight:800;cursor:pointer;transition:all .25s;margin-top:.5rem;}
+.submit-btn:hover{transform:translateY(-2px);box-shadow:0 12px 32px rgba(139,92,246,.35);}
+/* FLASH */
+.flash{padding:.875rem 1.1rem;border-radius:12px;margin-bottom:1.5rem;font-size:.825rem;font-weight:600;border:1px solid;}
+.flash-success{background:rgba(34,197,94,.08);color:#4ade80;border-color:rgba(34,197,94,.25);}
+.flash-error{background:rgba(236,72,153,.08);color:var(--pink);border-color:rgba(236,72,153,.25);}
+@media(max-width:600px){nav .nav-links{display:none;}.loan-types{grid-template-columns:repeat(2,1fr);}.form-row{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+<nav>
+  <a class="brand" href="{% url 'dashboard' %}">Nexa<span>Bank</span></a>
+  <div class="nav-links">
+    <a href="{% url 'dashboard' %}" class="nl">Dashboard</a>
+    <a href="{% url 'deposit' %}" class="nl">Deposit</a>
+    <a href="{% url 'withdraw' %}" class="nl">Withdraw</a>
+    <a href="{% url 'transfer' %}" class="nl">Transfer</a>
+    <a href="{% url 'transactions' %}" class="nl">History</a>
+    <a href="{% url 'loans' %}" class="nl active">Loans</a>
+  </div>
+  <form method="post" action="{% url 'logout' %}">{% csrf_token %}<button class="nav-logout">Logout</button></form>
+</nav>
+<div class="page">
+  <a href="{% url 'loans' %}" class="back">← My Loans</a>
+  {% if messages %}{% for m in messages %}<div class="flash flash-{{ m.tags }}">{{ m }}</div>{% endfor %}{% endif %}
+  <div class="glass-card">
+    <div class="card-top">
+      <div class="card-icon">💼</div>
+      <h1>Apply for a Loan</h1>
+      <p class="card-sub">Fill in the details — get an instant EMI quote</p>
+    </div>
+    <!-- EMI PREVIEW -->
+    <div class="emi-box" id="emiBox">
+      <div class="emi-box-top">
+        <div>
+          <div class="emi-label">Estimated Monthly EMI</div>
+          <div class="emi-value" id="emiVal">$0.00</div>
+          <div class="emi-period">per month</div>
+        </div>
+      </div>
+      <div class="emi-details">
+        <div class="emi-detail"><div class="ed-label">Total Payable</div><div class="ed-value" id="emiTotal">$0.00</div></div>
+        <div class="emi-detail"><div class="ed-label">Total Interest</div><div class="ed-value" id="emiInterest">$0.00</div></div>
+        <div class="emi-detail"><div class="ed-label">Tenure</div><div class="ed-value" id="emiTenure">— mo.</div></div>
+      </div>
+    </div>
+    <form method="post">
+      {% csrf_token %}
+      <div class="form-group">
+        <label>Account</label>
+        <select name="account" required>
+          <option value="">Select account...</option>
+          {% for acc in form.account.field.queryset %}
+          <option value="{{ acc.pk }}">{{ acc.get_account_type_display }} — {{ acc.account_number }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Loan Type</label>
+        <div class="loan-types">
+          <label class="lt-card" id="lt-personal" onclick="selectLoanType(this,'PERSONAL')"><input type="radio" name="loan_type" value="PERSONAL"><div class="lt-icon">👤</div><div class="lt-name">Personal</div></label>
+          <label class="lt-card" id="lt-home" onclick="selectLoanType(this,'HOME')"><input type="radio" name="loan_type" value="HOME"><div class="lt-icon">🏠</div><div class="lt-name">Home</div></label>
+          <label class="lt-card" id="lt-car" onclick="selectLoanType(this,'CAR')"><input type="radio" name="loan_type" value="CAR"><div class="lt-icon">🚗</div><div class="lt-name">Car</div></label>
+          <label class="lt-card" id="lt-business" onclick="selectLoanType(this,'BUSINESS')"><input type="radio" name="loan_type" value="BUSINESS"><div class="lt-icon">💼</div><div class="lt-name">Business</div></label>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Principal Amount ($)</label>
+          <input type="number" name="principal_amount" id="principal" placeholder="e.g. 10000" min="100" step="0.01" oninput="calcEMI()" required>
+        </div>
+        <div class="form-group">
+          <label>Interest Rate (% p.a.)</label>
+          <input type="number" name="interest_rate" id="rate" placeholder="e.g. 8.5" min="0.01" max="50" step="0.01" oninput="calcEMI()" required>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Tenure (Months)</label>
+        <input type="number" name="tenure_months" id="tenure" placeholder="e.g. 24" min="1" max="360" oninput="calcEMI()" required>
+      </div>
+      <button type="submit" class="submit-btn">Submit Application →</button>
+    </form>
+  </div>
+</div>
+<script>
+function selectLoanType(el,val){
+  document.querySelectorAll('.lt-card').forEach(c=>c.classList.remove('selected'));
+  el.classList.add('selected');
+  el.querySelector('input').checked=true;
+}
+function calcEMI(){
+  const p=parseFloat(document.getElementById('principal').value)||0;
+  const r=parseFloat(document.getElementById('rate').value)/100/12||0;
+  const n=parseInt(document.getElementById('tenure').value)||0;
+  const box=document.getElementById('emiBox');
+  if(p>0&&r>0&&n>0){
+    const emi=p*r*Math.pow(1+r,n)/(Math.pow(1+r,n)-1);
+    const total=emi*n;
+    const interest=total-p;
+    document.getElementById('emiVal').textContent='$'+emi.toFixed(2);
+    document.getElementById('emiTotal').textContent='$'+total.toFixed(2);
+    document.getElementById('emiInterest').textContent='$'+interest.toFixed(2);
+    document.getElementById('emiTenure').textContent=n+' mo.';
+    box.classList.add('visible');
+  }else{box.classList.remove('visible');}
+}
+</script>
+</body>
+</html>

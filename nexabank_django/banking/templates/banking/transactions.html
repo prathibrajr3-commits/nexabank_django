@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Transaction History — NexaBank</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=VT323&family=Roboto+Condensed:wght@300;400;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{--bg:#010d04;--s1:#031409;--green:#00ff41;--green2:#00cc33;--dim:#00802a;--red:#ff2255;--amber:#ffaa00;--border:rgba(0,255,65,.1);--b2:rgba(0,255,65,.2);--text:#c8ffd0;--muted:#3a6640;}
+body{background:var(--bg);color:var(--text);font-family:'Share Tech Mono',monospace;min-height:100vh;}
+/* CRT EFFECT */
+body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.05) 2px,rgba(0,0,0,.05) 4px);pointer-events:none;z-index:9999;}
+/* NAV */
+nav{display:flex;align-items:center;justify-content:space-between;padding:.875rem 1.75rem;background:var(--s1);border-bottom:1px solid var(--border);}
+.brand{font-family:'VT323',monospace;font-size:1.6rem;letter-spacing:.1em;color:var(--green);text-decoration:none;text-shadow:0 0 10px rgba(0,255,65,.4);}
+.nav-links{display:flex;gap:1.5rem;}
+.nl{color:var(--muted);text-decoration:none;font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;transition:color .15s;}
+.nl:hover,.nl.active{color:var(--green);}
+.nav-logout{background:none;border:1px solid var(--border);color:var(--muted);padding:.4rem .875rem;font-family:'Share Tech Mono',monospace;font-size:.72rem;letter-spacing:.08em;cursor:pointer;transition:all .2s;text-transform:uppercase;}
+.nav-logout:hover{border-color:var(--red);color:var(--red);}
+/* PAGE */
+.page{padding:1.75rem;}
+/* TERMINAL HEADER */
+.term-bar{background:var(--s1);border:1px solid var(--border);padding:.625rem 1rem;display:flex;align-items:center;gap:.75rem;margin-bottom:1.5rem;}
+.term-dots span{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:4px;}
+.td1{background:#ff5f57;}.td2{background:#ffbd2e;}.td3{background:var(--green2);}
+.term-title{font-family:'VT323',monospace;font-size:1.1rem;letter-spacing:.1em;color:rgba(200,255,208,.4);flex:1;text-align:center;}
+/* PAGE HEADER */
+.page-header{margin-bottom:1.5rem;}
+.ph-prompt{color:var(--dim);font-size:.78rem;margin-bottom:.25rem;}
+.ph-cmd{font-size:1.1rem;color:var(--green);text-shadow:0 0 10px rgba(0,255,65,.3);}
+.ph-cmd .cursor{display:inline-block;width:10px;height:1em;background:var(--green);margin-left:3px;animation:blink 1s step-end infinite;vertical-align:text-bottom;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:0;}}
+/* CONTROLS */
+.controls{display:flex;align-items:center;gap:1rem;margin-bottom:1.25rem;flex-wrap:wrap;}
+.filter-label{font-size:.72rem;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;}
+.filter-btns{display:flex;gap:.5rem;flex-wrap:wrap;}
+.fb{padding:.35rem .875rem;border:1px solid var(--border);background:transparent;color:var(--muted);font-family:'Share Tech Mono',monospace;font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;text-decoration:none;cursor:pointer;transition:all .2s;}
+.fb:hover,.fb.active{border-color:var(--green);color:var(--green);background:rgba(0,255,65,.04);}
+/* STATS BAR */
+.stats-bar{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid var(--border);margin-bottom:1.5rem;}
+.sb{padding:.875rem 1rem;border-right:1px solid var(--border);text-align:center;}
+.sb:last-child{border-right:none;}
+.sb-label{font-size:.6rem;color:var(--muted);letter-spacing:.12em;text-transform:uppercase;margin-bottom:.35rem;}
+.sb-val{font-size:1.1rem;color:var(--green);}
+/* TABLE */
+.tbl-wrap{border:1px solid var(--border);overflow-x:auto;}
+.tbl-header{background:var(--s1);border-bottom:1px solid var(--border);padding:.625rem 1rem;font-size:.68rem;color:var(--dim);letter-spacing:.1em;text-transform:uppercase;}
+table{width:100%;border-collapse:collapse;}
+th{text-align:left;padding:.625rem 1rem;font-size:.65rem;color:var(--dim);letter-spacing:.12em;text-transform:uppercase;border-bottom:1px solid var(--border);background:rgba(0,255,65,.02);}
+td{padding:.75rem 1rem;border-bottom:1px solid rgba(0,255,65,.05);font-size:.78rem;vertical-align:middle;}
+tr:hover td{background:rgba(0,255,65,.02);}
+tr:last-child td{border-bottom:none;}
+.tx-type{display:flex;align-items:center;gap:.5rem;}
+.tx-ic{width:22px;height:22px;border-radius:3px;display:flex;align-items:center;justify-content:center;font-size:.7rem;flex-shrink:0;}
+.ic-in{background:rgba(0,255,65,.1);color:var(--green);}
+.ic-out{background:rgba(255,34,85,.08);color:var(--red);}
+.type-label{color:rgba(200,255,208,.6);font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;}
+.mono{font-family:'Share Tech Mono',monospace;}
+.desc{color:rgba(200,255,208,.5);font-size:.72rem;}
+.acc-num{color:var(--dim);font-size:.68rem;}
+.pos{color:var(--green);}
+.neg{color:var(--red);}
+.bal{color:var(--amber);}
+.date{color:var(--muted);font-size:.7rem;}
+.badge{padding:1px 7px;font-size:.6rem;letter-spacing:.08em;text-transform:uppercase;border:1px solid;}
+.badge-ok{border-color:rgba(0,255,65,.25);color:var(--dim);}
+.empty-row td{text-align:center;padding:3rem;color:var(--muted);font-size:.78rem;}
+/* BACK */
+.back{display:inline-flex;align-items:center;gap:.5rem;color:var(--muted);text-decoration:none;font-size:.72rem;margin-bottom:1.25rem;letter-spacing:.08em;text-transform:uppercase;transition:color .2s;}
+.back:hover{color:var(--green);}
+@media(max-width:800px){nav .nav-links{display:none;}.stats-bar{grid-template-columns:1fr 1fr;}}
+</style>
+</head>
+<body>
+<nav>
+  <a class="brand" href="{% url 'dashboard' %}">NEXA_BANK</a>
+  <div class="nav-links">
+    <a href="{% url 'dashboard' %}" class="nl">Dashboard</a>
+    <a href="{% url 'deposit' %}" class="nl">Deposit</a>
+    <a href="{% url 'withdraw' %}" class="nl">Withdraw</a>
+    <a href="{% url 'transfer' %}" class="nl">Transfer</a>
+    <a href="{% url 'transactions' %}" class="nl active">History</a>
+    <a href="{% url 'loans' %}" class="nl">Loans</a>
+  </div>
+  <form method="post" action="{% url 'logout' %}">{% csrf_token %}<button class="nav-logout">[ EXIT ]</button></form>
+</nav>
+<div class="page">
+  <a href="{% url 'dashboard' %}" class="back">⬅ back_to_dashboard</a>
+  {% if messages %}{% for m in messages %}<div style="padding:.75rem 1rem;border:1px solid;margin-bottom:1rem;font-size:.78rem;{% if 'success' in m.tags %}border-color:rgba(0,255,65,.3);color:var(--green);{% else %}border-color:rgba(255,34,85,.3);color:var(--red);{% endif %}">{{ m }}</div>{% endfor %}{% endif %}
+  <div class="term-bar">
+    <div class="term-dots"><span class="td1"></span><span class="td2"></span><span class="td3"></span></div>
+    <div class="term-title">TRANSACTION_LEDGER.log</div>
+  </div>
+  <div class="page-header">
+    <div class="ph-prompt">root@nexabank:~$</div>
+    <div class="ph-cmd">query --ledger --user="{{ user.username }}" --sort=desc<span class="cursor"></span></div>
+  </div>
+  <div class="stats-bar">
+    <div class="sb"><div class="sb-label">Total Entries</div><div class="sb-val">{{ txs|length }}</div></div>
+    <div class="sb"><div class="sb-label">Deposits</div><div class="sb-val" style="color:var(--green);">{{ txs|length }}</div></div>
+    <div class="sb"><div class="sb-label">Filter</div><div class="sb-val" style="color:var(--amber);">{{ filter|default:"ALL"|upper }}</div></div>
+    <div class="sb"><div class="sb-label">Status</div><div class="sb-val" style="font-size:.85rem;">LIVE</div></div>
+  </div>
+  <div class="controls">
+    <span class="filter-label">filter:</span>
+    <div class="filter-btns">
+      <a href="{% url 'transactions' %}" class="fb {% if not filter %}active{% endif %}">ALL</a>
+      <a href="{% url 'transactions' %}?type=DEPOSIT" class="fb {% if filter == 'DEPOSIT' %}active{% endif %}">DEPOSIT</a>
+      <a href="{% url 'transactions' %}?type=WITHDRAWAL" class="fb {% if filter == 'WITHDRAWAL' %}active{% endif %}">WITHDRAWAL</a>
+      <a href="{% url 'transactions' %}?type=TRANSFER_IN" class="fb {% if filter == 'TRANSFER_IN' %}active{% endif %}">TRANSFER_IN</a>
+      <a href="{% url 'transactions' %}?type=TRANSFER_OUT" class="fb {% if filter == 'TRANSFER_OUT' %}active{% endif %}">TRANSFER_OUT</a>
+    </div>
+  </div>
+  <div class="tbl-wrap">
+    <div class="tbl-header">// OUTPUT: {{ txs|length }} RECORDS FOUND</div>
+    <table>
+      <thead>
+        <tr><th>TYPE</th><th>DESCRIPTION</th><th>ACCOUNT</th><th>AMOUNT</th><th>BALANCE_AFTER</th><th>STATUS</th><th>TIMESTAMP</th></tr>
+      </thead>
+      <tbody>
+        {% for tx in txs %}
+        <tr>
+          <td>
+            <div class="tx-type">
+              <div class="tx-ic {% if tx.transaction_type == 'DEPOSIT' or tx.transaction_type == 'TRANSFER_IN' %}ic-in{% else %}ic-out{% endif %}">
+                {% if tx.transaction_type == 'DEPOSIT' %}▼{% elif tx.transaction_type == 'WITHDRAWAL' %}▲{% elif tx.transaction_type == 'TRANSFER_IN' %}◄{% else %}►{% endif %}
+              </div>
+              <span class="type-label">{{ tx.transaction_type }}</span>
+            </div>
+          </td>
+          <td><span class="desc">{{ tx.description|default:"—" }}</span></td>
+          <td><span class="acc-num mono">{{ tx.account.account_number }}</span></td>
+          <td class="mono {% if tx.transaction_type == 'DEPOSIT' or tx.transaction_type == 'TRANSFER_IN' %}pos{% else %}neg{% endif %}">
+            {% if tx.transaction_type == 'DEPOSIT' or tx.transaction_type == 'TRANSFER_IN' %}+{% else %}-{% endif %}${{ tx.amount|floatformat:2 }}
+          </td>
+          <td class="mono bal">${{ tx.balance_after|floatformat:2 }}</td>
+          <td><span class="badge badge-ok">{{ tx.status }}</span></td>
+          <td class="date mono">{{ tx.timestamp|date:"Y-m-d H:i" }}</td>
+        </tr>
+        {% empty %}
+        <tr class="empty-row"><td colspan="7">// NO RECORDS FOUND — LEDGER EMPTY</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,56 @@
+{% extends 'banking/base.html' %}
+{% block title %}New Account — NexaBank{% endblock %}
+{% block content %}
+<style>
+.form-page-wrap { max-width: 480px; margin: 2rem auto; }
+.form-card { background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 2.25rem; }
+.form-page-icon { width: 50px; height: 50px; border-radius: 14px; background: rgba(124,77,255,0.1); border: 1px solid rgba(124,77,255,0.2); display: flex; align-items: center; justify-content: center; font-size: 1.35rem; margin-bottom: 1rem; }
+.form-page-header h1 { font-size: 1.5rem; font-weight: 800; }
+.form-page-header p { color: var(--muted); font-size: 0.875rem; margin-top: 0.3rem; margin-bottom: 1.75rem; }
+.btn-block { width: 100%; justify-content: center; padding: 13px; font-size: 0.95rem; }
+.btn-back { color: var(--muted); text-decoration: none; font-size: 0.875rem; display: inline-flex; align-items: center; gap: 6px; margin-bottom: 1.25rem; transition: color 0.2s; }
+.account-type-cards { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.75rem; margin-bottom: 1.5rem; }
+.type-card { border: 1px solid var(--border); border-radius: 12px; padding: 1rem; text-align: center; cursor: pointer; transition: all 0.2s; }
+.type-card:hover { border-color: var(--accent); background: rgba(0,229,255,0.05); }
+.type-card.selected { border-color: var(--accent); background: rgba(0,229,255,0.08); }
+.type-card .type-icon { font-size: 1.5rem; margin-bottom: 0.5rem; }
+.type-card .type-name { font-size: 0.78rem; font-weight: 600; }
+</style>
+<div class="form-page-wrap fade-up">
+    <a href="{% url 'dashboard' %}" class="btn-back">← Back to Dashboard</a>
+    <div class="form-card">
+        <div class="form-page-icon">🏦</div>
+        <div class="form-page-header">
+            <h1>Open New Account</h1>
+            <p>Select the type of account you want to open</p>
+        </div>
+        <form method="post">
+            {% csrf_token %}
+            <div class="account-type-cards">
+                <label class="type-card" onclick="selectType(this, 'SAVINGS')">
+                    <div class="type-icon">💰</div>
+                    <div class="type-name">Savings</div>
+                    <input type="radio" name="account_type" value="SAVINGS" style="display:none" required>
+                </label>
+                <label class="type-card" onclick="selectType(this, 'CHECKING')">
+                    <div class="type-icon">💳</div>
+                    <div class="type-name">Checking</div>
+                    <input type="radio" name="account_type" value="CHECKING" style="display:none">
+                </label>
+                <label class="type-card" onclick="selectType(this, 'FIXED')">
+                    <div class="type-icon">📈</div>
+                    <div class="type-name">Fixed Deposit</div>
+                    <input type="radio" name="account_type" value="FIXED" style="display:none">
+                </label>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block">Open Account →</button>
+        </form>
+    </div>
+</div>
+<script>
+function selectType(el, val) {
+    document.querySelectorAll('.type-card').forEach(c => c.classList.remove('selected'));
+    el.classList.add('selected');
+}
+</script>
+{% endblock %}

@@ -1,0 +1,85 @@
+{% extends 'banking/base.html' %}
+{% block title %}Apply for Loan — NexaBank{% endblock %}
+{% block content %}
+<style>
+.form-page-wrap { max-width: 560px; margin: 2rem auto; }
+.form-card { background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 2.25rem; }
+.form-page-icon { width: 50px; height: 50px; border-radius: 14px; background: rgba(255,213,79,0.1); border: 1px solid rgba(255,213,79,0.2); display: flex; align-items: center; justify-content: center; font-size: 1.35rem; margin-bottom: 1rem; }
+.form-page-header h1 { font-size: 1.5rem; font-weight: 800; }
+.form-page-header p { color: var(--muted); font-size: 0.875rem; margin-top: 0.3rem; margin-bottom: 1.75rem; }
+.btn-block { width: 100%; justify-content: center; padding: 13px; font-size: 0.95rem; }
+.btn-back { color: var(--muted); text-decoration: none; font-size: 0.875rem; display: inline-flex; align-items: center; gap: 6px; margin-bottom: 1.25rem; transition: color 0.2s; }
+.btn-back:hover { color: var(--text); }
+.emi-preview { background: rgba(0,229,255,0.06); border: 1px solid rgba(0,229,255,0.15); border-radius: 12px; padding: 1rem 1.25rem; margin-bottom: 1.25rem; display: none; }
+.emi-preview.show { display: block; }
+.emi-label { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); margin-bottom: 0.3rem; }
+.emi-value { font-family: 'DM Mono', monospace; font-size: 1.5rem; color: var(--accent); }
+</style>
+<div class="form-page-wrap fade-up">
+    <a href="{% url 'loans' %}" class="btn-back">← Back to Loans</a>
+    <div class="form-card">
+        <div class="form-page-icon">💼</div>
+        <div class="form-page-header">
+            <h1>Apply for Loan</h1>
+            <p>Fill in the details below to submit your loan application</p>
+        </div>
+
+        <div class="emi-preview" id="emiPreview">
+            <div class="emi-label">Estimated Monthly EMI</div>
+            <div class="emi-value" id="emiValue">$0.00</div>
+        </div>
+
+        <form method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <label class="form-label">Account</label>
+                <select name="account" class="form-control" required>
+                    <option value="">Choose account...</option>
+                    {% for account in form.account.field.queryset %}
+                    <option value="{{ account.id }}">{{ account.get_account_type_display }} — {{ account.account_number }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Loan Type</label>
+                <select name="loan_type" class="form-control" required>
+                    <option value="">Select loan type...</option>
+                    <option value="PERSONAL">Personal Loan</option>
+                    <option value="HOME">Home Loan</option>
+                    <option value="CAR">Car Loan</option>
+                    <option value="BUSINESS">Business Loan</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Principal Amount (USD)</label>
+                <input type="number" name="principal_amount" id="principal" class="form-control" placeholder="e.g. 10000" step="0.01" min="100" required>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Annual Interest Rate (%)</label>
+                <input type="number" name="interest_rate" id="rate" class="form-control" placeholder="e.g. 8.5" step="0.01" min="0.01" max="50" required>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Tenure (Months)</label>
+                <input type="number" name="tenure_months" id="tenure" class="form-control" placeholder="e.g. 24" min="1" max="360" required>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block">Submit Application →</button>
+        </form>
+    </div>
+</div>
+
+<script>
+function calcEMI() {
+    const p = parseFloat(document.getElementById('principal').value);
+    const r = parseFloat(document.getElementById('rate').value) / 100 / 12;
+    const n = parseInt(document.getElementById('tenure').value);
+    if (p && r && n) {
+        const emi = p * r * Math.pow(1+r, n) / (Math.pow(1+r, n) - 1);
+        document.getElementById('emiValue').textContent = '$' + emi.toFixed(2);
+        document.getElementById('emiPreview').classList.add('show');
+    }
+}
+['principal','rate','tenure'].forEach(id => {
+    document.getElementById(id).addEventListener('input', calcEMI);
+});
+</script>
+{% endblock %}

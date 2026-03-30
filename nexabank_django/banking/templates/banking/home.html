@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NexaBank</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@300;400;500&family=IBM+Plex+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{--black:#0a0a0a;--white:#f5f0e8;--red:#e63329;--yellow:#f5c800;}
+body{background:var(--black);color:var(--white);font-family:'IBM Plex Sans',sans-serif;overflow-x:hidden;}
+/* NAV */
+nav{display:flex;align-items:center;justify-content:space-between;padding:1.25rem 2.5rem;border-bottom:2px solid var(--white);position:sticky;top:0;z-index:100;background:var(--black);}
+.nav-logo{font-family:'Bebas Neue',sans-serif;font-size:2rem;letter-spacing:2px;color:var(--white);text-decoration:none;}
+.nav-logo em{color:var(--red);font-style:normal;}
+.nav-actions{display:flex;gap:.75rem;}
+.btn-nav-ghost{background:transparent;border:1px solid rgba(245,240,232,.3);color:var(--white);padding:8px 20px;font-family:'IBM Plex Mono',monospace;font-size:.75rem;letter-spacing:.1em;cursor:pointer;text-decoration:none;transition:all .2s;text-transform:uppercase;}
+.btn-nav-ghost:hover{border-color:var(--white);}
+.btn-nav-solid{background:var(--white);border:1px solid var(--white);color:var(--black);padding:8px 20px;font-family:'IBM Plex Mono',monospace;font-size:.75rem;letter-spacing:.1em;cursor:pointer;text-decoration:none;transition:all .2s;text-transform:uppercase;font-weight:500;}
+.btn-nav-solid:hover{background:var(--yellow);border-color:var(--yellow);}
+/* HERO */
+.hero{display:grid;grid-template-columns:1fr 1fr;min-height:90vh;border-bottom:2px solid rgba(245,240,232,.15);}
+.hero-left{padding:5rem 2.5rem;border-right:2px solid rgba(245,240,232,.15);display:flex;flex-direction:column;justify-content:center;}
+.hero-eyebrow{font-family:'IBM Plex Mono',monospace;font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:var(--red);margin-bottom:1.5rem;display:flex;align-items:center;gap:.75rem;}
+.hero-eyebrow::before{content:'';display:block;width:2rem;height:2px;background:var(--red);}
+h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(5rem,10vw,9rem);line-height:.92;letter-spacing:-1px;margin-bottom:2rem;}
+h1 .slash{color:var(--red);}
+.hero-sub{font-family:'IBM Plex Mono',monospace;font-size:.85rem;line-height:1.8;color:rgba(245,240,232,.6);max-width:420px;margin-bottom:2.5rem;border-left:2px solid var(--red);padding-left:1.25rem;}
+.hero-cta{display:flex;gap:1rem;flex-wrap:wrap;}
+.btn-cta-primary{background:var(--red);color:var(--white);padding:14px 32px;font-family:'IBM Plex Mono',monospace;font-size:.8rem;letter-spacing:.12em;text-transform:uppercase;border:none;cursor:pointer;text-decoration:none;transition:background .2s;}
+.btn-cta-primary:hover{background:#cc2222;}
+.btn-cta-outline{background:transparent;color:var(--white);padding:14px 32px;font-family:'IBM Plex Mono',monospace;font-size:.8rem;letter-spacing:.12em;text-transform:uppercase;border:2px solid rgba(245,240,232,.3);cursor:pointer;text-decoration:none;transition:all .2s;}
+.btn-cta-outline:hover{border-color:var(--white);}
+.hero-right{display:grid;grid-template-rows:1fr 1fr;}
+.hero-stat-box{padding:3rem 2.5rem;border-bottom:2px solid rgba(245,240,232,.15);display:flex;flex-direction:column;justify-content:flex-end;}
+.hero-stat-box:last-child{border-bottom:none;}
+.stat-num{font-family:'Bebas Neue',sans-serif;font-size:5rem;line-height:1;color:var(--yellow);}
+.stat-label{font-family:'IBM Plex Mono',monospace;font-size:.72rem;letter-spacing:.15em;text-transform:uppercase;color:rgba(245,240,232,.5);margin-top:.5rem;}
+/* FEATURES STRIP */
+.features-strip{display:grid;grid-template-columns:repeat(4,1fr);}
+.feat{padding:3rem 2rem;border-right:2px solid rgba(245,240,232,.1);}
+.feat:last-child{border-right:none;}
+.feat-num{font-family:'Bebas Neue',sans-serif;font-size:4rem;color:rgba(245,240,232,.1);line-height:1;margin-bottom:1rem;}
+.feat h3{font-family:'IBM Plex Mono',monospace;font-size:.8rem;letter-spacing:.1em;text-transform:uppercase;margin-bottom:.75rem;color:var(--white);}
+.feat p{font-size:.825rem;line-height:1.65;color:rgba(245,240,232,.5);}
+/* TICKER */
+.ticker{background:var(--red);padding:.6rem 0;overflow:hidden;white-space:nowrap;}
+.ticker-inner{display:inline-flex;gap:4rem;animation:ticker 20s linear infinite;}
+.ticker-item{font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:.1em;color:var(--white);}
+@keyframes ticker{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+/* BOTTOM BAR */
+.bottom-bar{display:flex;align-items:center;justify-content:space-between;padding:2rem 2.5rem;border-top:2px solid rgba(245,240,232,.1);margin-top:6rem;}
+.bottom-copy{font-family:'IBM Plex Mono',monospace;font-size:.72rem;color:rgba(245,240,232,.3);letter-spacing:.05em;}
+/* MESSAGES */
+.messages{position:fixed;top:80px;right:1.5rem;z-index:200;display:flex;flex-direction:column;gap:.5rem;}
+.msg{padding:.875rem 1.25rem;font-family:'IBM Plex Mono',monospace;font-size:.78rem;letter-spacing:.04em;border-left:3px solid;}
+.msg-success{background:rgba(0,200,100,.1);border-color:#00c864;color:#00c864;}
+.msg-error{background:rgba(230,51,41,.1);border-color:var(--red);color:var(--red);}
+@media(max-width:900px){.hero{grid-template-columns:1fr;}.hero-right{display:none;}.features-strip{grid-template-columns:1fr 1fr;}}
+</style>
+</head>
+<body>
+{% if messages %}
+<div class="messages">{% for m in messages %}<div class="msg msg-{{ m.tags }}">{{ m }}</div>{% endfor %}</div>
+{% endif %}
+<nav>
+  <a class="nav-logo" href="{% url 'home' %}">NEXA<em>BANK</em></a>
+  <div class="nav-actions">
+    <a href="{% url 'login' %}" class="btn-nav-ghost">Sign In</a>
+    <a href="{% url 'register' %}" class="btn-nav-solid">Open Account</a>
+  </div>
+</nav>
+<div class="ticker">
+  <div class="ticker-inner">
+    <span class="ticker-item">INSTANT TRANSFERS</span><span class="ticker-item">★</span>
+    <span class="ticker-item">ZERO MONTHLY FEES</span><span class="ticker-item">★</span>
+    <span class="ticker-item">FDIC INSURED</span><span class="ticker-item">★</span>
+    <span class="ticker-item">256-BIT ENCRYPTION</span><span class="ticker-item">★</span>
+    <span class="ticker-item">INSTANT TRANSFERS</span><span class="ticker-item">★</span>
+    <span class="ticker-item">ZERO MONTHLY FEES</span><span class="ticker-item">★</span>
+    <span class="ticker-item">FDIC INSURED</span><span class="ticker-item">★</span>
+    <span class="ticker-item">256-BIT ENCRYPTION</span><span class="ticker-item">★</span>
+  </div>
+</div>
+<div class="hero">
+  <div class="hero-left">
+    <div class="hero-eyebrow">Next-Generation Banking</div>
+    <h1>BANK<br>WITH<br>CON<span class="slash">/</span>FI<br>DENCE</h1>
+    <p class="hero-sub">Deposits, transfers, smart loans — built for the digital age. No hidden fees. No nonsense.</p>
+    <div class="hero-cta">
+      <a href="{% url 'register' %}" class="btn-cta-primary">Open Free Account →</a>
+      <a href="{% url 'login' %}" class="btn-cta-outline">Sign In</a>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="hero-stat-box">
+      <div class="stat-num">$0</div>
+      <div class="stat-label">Monthly Fees — Always Free</div>
+    </div>
+    <div class="hero-stat-box">
+      <div class="stat-num">256</div>
+      <div class="stat-label">Bit Encryption Standard</div>
+    </div>
+  </div>
+</div>
+<div class="features-strip">
+  <div class="feat"><div class="feat-num">01</div><h3>Accounts</h3><p>Savings, Checking, and Fixed Deposit accounts to organise your money.</p></div>
+  <div class="feat"><div class="feat-num">02</div><h3>Transfers</h3><p>Real-time atomic transfers to any NexaBank account with full history.</p></div>
+  <div class="feat"><div class="feat-num">03</div><h3>Loans</h3><p>Personal, home, car, and business loans with live EMI calculation.</p></div>
+  <div class="feat"><div class="feat-num">04</div><h3>Security</h3><p>bcrypt hashed passwords, session management, CSRF protection.</p></div>
+</div>
+<div class="bottom-bar">
+  <span class="bottom-copy">© 2024 NexaBank. All rights reserved.</span>
+  <span class="bottom-copy">FDIC INSURED · MEMBER SINCE 2024</span>
+</div>
+<script>setTimeout(()=>{document.querySelectorAll('.msg').forEach(m=>{m.style.transition='opacity .5s';m.style.opacity='0';setTimeout(()=>m.remove(),500);});},4000);</script>
+</body>
+</html>

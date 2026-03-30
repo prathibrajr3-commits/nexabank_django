@@ -1,0 +1,65 @@
+{% extends 'banking/base.html' %}
+{% block title %}Account Detail — NexaBank{% endblock %}
+{% block content %}
+<a href="{% url 'dashboard' %}" style="color:var(--muted);text-decoration:none;font-size:0.875rem;display:inline-flex;align-items:center;gap:6px;margin-bottom:1.5rem;">← Back to Dashboard</a>
+
+<div style="display:grid;grid-template-columns:1fr 2fr;gap:1.25rem;" class="fade-up">
+    <div>
+        <div class="card" style="margin-bottom:1.25rem;">
+            <div style="text-align:center;padding:1rem 0;">
+                <div style="font-size:2.5rem;margin-bottom:0.75rem;">
+                    {% if account.account_type == 'SAVINGS' %}💰{% elif account.account_type == 'CHECKING' %}💳{% else %}📈{% endif %}
+                </div>
+                <div style="font-size:0.78rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);margin-bottom:0.5rem;">{{ account.get_account_type_display }}</div>
+                <div style="font-family:'DM Mono',monospace;font-size:2rem;font-weight:500;letter-spacing:-1px;color:var(--accent);">
+                    ${{ account.balance|floatformat:2 }}
+                </div>
+                <div style="font-family:'DM Mono',monospace;font-size:0.78rem;color:var(--muted);margin-top:0.5rem;">{{ account.account_number }}</div>
+                <div style="margin-top:0.75rem;">
+                    <span class="badge {% if account.status == 'ACTIVE' %}badge-success{% else %}badge-danger{% endif %}">{{ account.status }}</span>
+                </div>
+            </div>
+            <div class="divider"></div>
+            <div style="font-size:0.8rem;color:var(--muted);">Opened: {{ account.created_at|date:"M d, Y" }}</div>
+        </div>
+        <div style="display:grid;gap:0.75rem;">
+            <a href="{% url 'deposit' %}" class="btn btn-success" style="justify-content:center;">⬇ Deposit</a>
+            <a href="{% url 'withdraw' %}" class="btn btn-danger" style="justify-content:center;">⬆ Withdraw</a>
+            <a href="{% url 'transfer' %}" class="btn btn-outline" style="justify-content:center;">↔ Transfer</a>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-header"><span class="card-title">Transaction History</span></div>
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Type</th>
+                        <th>Description</th>
+                        <th>Amount</th>
+                        <th>Balance</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for tx in transactions %}
+                    <tr>
+                        <td>
+                            <span style="font-size:1rem;">{% if tx.transaction_type == 'DEPOSIT' %}⬇{% elif tx.transaction_type == 'WITHDRAWAL' %}⬆{% elif tx.transaction_type == 'TRANSFER_IN' %}↙{% else %}↗{% endif %}</span>
+                        </td>
+                        <td style="font-size:0.825rem;">{{ tx.description|default:tx.get_transaction_type_display }}</td>
+                        <td class="{% if tx.transaction_type == 'DEPOSIT' or tx.transaction_type == 'TRANSFER_IN' %}amount-pos{% else %}amount-neg{% endif %}">
+                            {% if tx.transaction_type == 'DEPOSIT' or tx.transaction_type == 'TRANSFER_IN' %}+{% else %}-{% endif %}${{ tx.amount|floatformat:2 }}
+                        </td>
+                        <td>${{ tx.balance_after|floatformat:2 }}</td>
+                        <td style="color:var(--muted);font-size:0.78rem;">{{ tx.timestamp|date:"M d, Y H:i" }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="5" style="text-align:center;padding:2rem;color:var(--muted);">No transactions yet</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

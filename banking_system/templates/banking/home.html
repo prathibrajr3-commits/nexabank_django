@@ -1,0 +1,182 @@
+{% extends 'banking/base.html' %}
+{% block title %}NexaBank — Modern Banking{% endblock %}
+{% block content %}
+<style>
+.hero {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 5rem 1rem 4rem;
+    position: relative;
+}
+
+.hero-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(0,229,255,0.06);
+    border: 1px solid rgba(0,229,255,0.15);
+    color: var(--accent);
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+}
+
+.hero h1 {
+    font-size: clamp(2.5rem, 7vw, 5rem);
+    font-weight: 800;
+    letter-spacing: -2px;
+    line-height: 1.05;
+    max-width: 700px;
+    background: linear-gradient(135deg, var(--text) 40%, var(--muted));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 1.25rem;
+}
+
+.hero h1 .accent {
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.hero-sub {
+    max-width: 480px;
+    color: var(--muted);
+    font-size: 1.05rem;
+    line-height: 1.65;
+    margin-bottom: 2.5rem;
+    -webkit-text-fill-color: var(--muted);
+}
+
+.hero-cta {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.hero-cta .btn { padding: 13px 28px; font-size: 0.95rem; }
+
+/* Features */
+.features {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.25rem;
+    margin-top: 4rem;
+}
+
+.feature-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 1.75rem;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+}
+
+.feature-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.feature-card:hover { transform: translateY(-4px); border-color: rgba(0,229,255,0.2); }
+.feature-card:hover::before { opacity: 1; }
+
+.feature-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    margin-bottom: 1rem;
+    background: rgba(0,229,255,0.08);
+}
+
+.feature-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 0.5rem; }
+.feature-card p { color: var(--muted); font-size: 0.875rem; line-height: 1.6; }
+
+/* Stats bar */
+.stats-bar {
+    display: grid;
+    grid-template-columns: repeat(4,1fr);
+    gap: 0;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+    margin-top: 3rem;
+    background: var(--surface);
+}
+
+.stat-item {
+    padding: 1.5rem;
+    text-align: center;
+    border-right: 1px solid var(--border);
+}
+
+.stat-item:last-child { border-right: none; }
+.stat-num { font-family: 'DM Mono', monospace; font-size: 1.75rem; font-weight: 500; color: var(--accent); }
+.stat-label { font-size: 0.78rem; color: var(--muted); margin-top: 0.3rem; letter-spacing: 0.05em; text-transform: uppercase; }
+
+@media (max-width: 768px) {
+    .features { grid-template-columns: 1fr; }
+    .stats-bar { grid-template-columns: repeat(2, 1fr); }
+    .stat-item:nth-child(2) { border-right: none; }
+    .stat-item { border-bottom: 1px solid var(--border); }
+}
+</style>
+
+<div class="hero fade-up">
+    <div class="hero-eyebrow">
+        ⬡ Secure · Fast · Modern
+    </div>
+    <h1>Banking built for the <span class="accent">digital age</span></h1>
+    <p class="hero-sub">
+        Manage your finances with confidence. Deposits, transfers, loans — all in one powerful platform.
+    </p>
+    <div class="hero-cta">
+        <a href="{% url 'register' %}" class="btn btn-primary">Open an Account →</a>
+        <a href="{% url 'login' %}" class="btn btn-outline">Sign In</a>
+    </div>
+</div>
+
+<div class="stats-bar fade-up">
+    <div class="stat-item"><div class="stat-num">$0 fee</div><div class="stat-label">Monthly Charges</div></div>
+    <div class="stat-item"><div class="stat-num">256-bit</div><div class="stat-label">Encryption</div></div>
+    <div class="stat-item"><div class="stat-num">24/7</div><div class="stat-label">Availability</div></div>
+    <div class="stat-item"><div class="stat-num">FDIC</div><div class="stat-label">Insured</div></div>
+</div>
+
+<div class="features fade-up">
+    <div class="feature-card">
+        <div class="feature-icon">⚡</div>
+        <h3>Instant Transfers</h3>
+        <p>Move money between accounts in real-time with zero delays and complete transaction history.</p>
+    </div>
+    <div class="feature-card">
+        <div class="feature-icon">🏦</div>
+        <h3>Multiple Accounts</h3>
+        <p>Open savings, checking, and fixed deposit accounts to organize your financial life.</p>
+    </div>
+    <div class="feature-card">
+        <div class="feature-icon">💳</div>
+        <h3>Smart Loans</h3>
+        <p>Apply for personal, home, car, or business loans with transparent rates and EMI calculator.</p>
+    </div>
+</div>
+{% endblock %}

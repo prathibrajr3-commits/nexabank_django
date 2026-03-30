@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Account — NexaBank</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{--bg:#f4f6f9;--white:#ffffff;--ink:#111827;--blue:#1d4ed8;--green:#15803d;--red:#b91c1c;--slate:#374151;--muted:#6b7280;--border:#e5e7eb;--b2:#d1d5db;}
+body{background:var(--bg);color:var(--ink);font-family:'Inter',sans-serif;min-height:100vh;}
+/* NAV */
+nav{display:flex;align-items:center;justify-content:space-between;padding:1rem 2rem;background:var(--white);border-bottom:1px solid var(--border);box-shadow:0 1px 3px rgba(0,0,0,.04);}
+.brand{font-size:1.1rem;font-weight:700;color:var(--blue);text-decoration:none;letter-spacing:-.3px;}
+.nav-links{display:flex;gap:.125rem;}
+.nl{padding:.4rem .75rem;border-radius:6px;color:var(--muted);text-decoration:none;font-size:.825rem;font-weight:500;transition:all .15s;}
+.nl:hover{background:var(--bg);color:var(--ink);}
+.logout-btn{background:none;border:1px solid var(--border);color:var(--muted);padding:.4rem .875rem;border-radius:6px;font-family:'Inter',sans-serif;font-size:.8rem;cursor:pointer;transition:all .15s;}
+.logout-btn:hover{border-color:var(--red);color:var(--red);}
+/* PAGE */
+.page{max-width:1060px;margin:0 auto;padding:2rem 1.5rem;}
+.back{display:inline-flex;align-items:center;gap:.4rem;color:var(--muted);text-decoration:none;font-size:.8rem;margin-bottom:1.25rem;transition:color .15s;}
+.back:hover{color:var(--blue);}
+/* ACCOUNT HERO */
+.acc-hero{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:1.5rem;background:var(--white);border:1px solid var(--border);border-radius:12px;padding:1.75rem;margin-bottom:1.25rem;box-shadow:0 1px 3px rgba(0,0,0,.04);}
+.acc-hero-icon{width:56px;height:56px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;}
+.ic-savings{background:#dbeafe;}
+.ic-checking{background:#ede9fe;}
+.ic-fixed{background:#fef3c7;}
+.acc-hero-info{}
+.acc-type-name{font-size:1.1rem;font-weight:700;margin-bottom:2px;}
+.acc-number{font-family:'JetBrains Mono',monospace;font-size:.78rem;color:var(--muted);}
+.acc-status{margin-top:.4rem;}
+.badge{padding:2px 9px;border-radius:4px;font-size:.65rem;font-weight:600;letter-spacing:.04em;text-transform:uppercase;}
+.badge-active{background:#dcfce7;color:#166534;}
+.badge-frozen{background:#dbeafe;color:#1e40af;}
+.badge-closed{background:#fee2e2;color:#991b1b;}
+.acc-hero-bal{text-align:right;}
+.bal-label{font-size:.7rem;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:.3rem;}
+.bal-value{font-family:'JetBrains Mono',monospace;font-size:2rem;font-weight:500;color:var(--blue);letter-spacing:-1px;}
+.bal-since{font-size:.7rem;color:var(--muted);margin-top:.25rem;}
+/* ACTION BAR */
+.action-bar{display:flex;gap:.75rem;margin-bottom:1.5rem;}
+.btn{display:inline-flex;align-items:center;gap:.5rem;padding:.6rem 1.1rem;border-radius:8px;font-family:'Inter',sans-serif;font-size:.825rem;font-weight:600;cursor:pointer;text-decoration:none;border:none;transition:all .15s;}
+.btn-green{background:#dcfce7;color:var(--green);border:1px solid #bbf7d0;}
+.btn-green:hover{background:#bbf7d0;}
+.btn-red{background:#fee2e2;color:var(--red);border:1px solid #fecaca;}
+.btn-red:hover{background:#fecaca;}
+.btn-blue{background:#dbeafe;color:var(--blue);border:1px solid #bfdbfe;}
+.btn-blue:hover{background:#bfdbfe;}
+/* CARD */
+.card{background:var(--white);border:1px solid var(--border);border-radius:12px;box-shadow:0 1px 3px rgba(0,0,0,.04);}
+.card-head{display:flex;align-items:center;justify-content:space-between;padding:1rem 1.5rem;border-bottom:1px solid var(--border);}
+.card-title{font-size:.78rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);}
+/* TABLE */
+.tbl-wrap{overflow-x:auto;}
+table{width:100%;border-collapse:collapse;}
+th{text-align:left;padding:.75rem 1.5rem;font-size:.7rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--border);background:#fafafa;}
+td{padding:.875rem 1.5rem;border-bottom:1px solid var(--border);font-size:.85rem;}
+tr:last-child td{border-bottom:none;}
+tr:hover td{background:#fafafa;}
+.mono{font-family:'JetBrains Mono',monospace;font-size:.78rem;}
+.pos{color:var(--green);font-weight:600;}
+.neg{color:var(--red);font-weight:600;}
+.tx-type{display:flex;align-items:center;gap:.5rem;}
+.tx-ic{width:24px;height:24px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:.7rem;}
+.ti-in{background:#dcfce7;}
+.ti-out{background:#fee2e2;}
+.desc{color:var(--muted);}
+.empty{padding:3rem;text-align:center;color:var(--muted);}
+/* FLASH */
+.flash{padding:.875rem 1rem;border-radius:8px;margin-bottom:1.25rem;font-size:.825rem;border:1px solid;}
+.flash-success{background:#f0fdf4;color:var(--green);border-color:#bbf7d0;}
+.flash-error{background:#fef2f2;color:var(--red);border-color:#fecaca;}
+@media(max-width:700px){nav .nav-links{display:none;}.acc-hero{grid-template-columns:1fr;}.action-bar{flex-wrap:wrap;}}
+</style>
+</head>
+<body>
+<nav>
+  <a class="brand" href="{% url 'dashboard' %}">NexaBank</a>
+  <div class="nav-links">
+    <a href="{% url 'dashboard' %}" class="nl">Dashboard</a>
+    <a href="{% url 'deposit' %}" class="nl">Deposit</a>
+    <a href="{% url 'withdraw' %}" class="nl">Withdraw</a>
+    <a href="{% url 'transfer' %}" class="nl">Transfer</a>
+    <a href="{% url 'transactions' %}" class="nl">History</a>
+    <a href="{% url 'loans' %}" class="nl">Loans</a>
+  </div>
+  <form method="post" action="{% url 'logout' %}">{% csrf_token %}<button class="logout-btn">Logout</button></form>
+</nav>
+<div class="page">
+  <a href="{% url 'dashboard' %}" class="back">← Dashboard</a>
+  {% if messages %}{% for m in messages %}<div class="flash flash-{{ m.tags }}">{{ m }}</div>{% endfor %}{% endif %}
+  <div class="acc-hero">
+    <div class="acc-hero-icon ic-{{ account.account_type|lower }}">
+      {% if account.account_type == 'SAVINGS' %}💰{% elif account.account_type == 'CHECKING' %}💳{% else %}📈{% endif %}
+    </div>
+    <div class="acc-hero-info">
+      <div class="acc-type-name">{{ account.get_account_type_display }}</div>
+      <div class="acc-number">{{ account.account_number }}</div>
+      <div class="acc-status">
+        <span class="badge badge-{{ account.status|lower }}">{{ account.status }}</span>
+      </div>
+    </div>
+    <div class="acc-hero-bal">
+      <div class="bal-label">Balance</div>
+      <div class="bal-value">${{ account.balance|floatformat:2 }}</div>
+      <div class="bal-since">Since {{ account.created_at|date:"M j, Y" }}</div>
+    </div>
+  </div>
+  <div class="action-bar">
+    <a href="{% url 'deposit' %}" class="btn btn-green">⬇ Deposit</a>
+    <a href="{% url 'withdraw' %}" class="btn btn-red">⬆ Withdraw</a>
+    <a href="{% url 'transfer' %}" class="btn btn-blue">↔ Transfer</a>
+  </div>
+  <div class="card">
+    <div class="card-head">
+      <span class="card-title">Transaction History</span>
+      <span style="font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--muted);">{{ txs|length }} records</span>
+    </div>
+    {% if txs %}
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Type</th><th>Description</th><th>Amount</th><th>Balance After</th><th>Date</th></tr></thead>
+        <tbody>
+          {% for tx in txs %}
+          <tr>
+            <td>
+              <div class="tx-type">
+                <div class="tx-ic {% if tx.transaction_type == 'DEPOSIT' or tx.transaction_type == 'TRANSFER_IN' %}ti-in{% else %}ti-out{% endif %}">
+                  {% if tx.transaction_type == 'DEPOSIT' %}⬇{% elif tx.transaction_type == 'WITHDRAWAL' %}⬆{% elif tx.transaction_type == 'TRANSFER_IN' %}↙{% else %}↗{% endif %}
+                </div>
+                <span style="font-size:.78rem;font-weight:600;">{{ tx.get_transaction_type_display }}</span>
+              </div>
+            </td>
+            <td class="desc">{{ tx.description|default:"—" }}</td>
+            <td class="mono {% if tx.transaction_type == 'DEPOSIT' or tx.transaction_type == 'TRANSFER_IN' %}pos{% else %}neg{% endif %}">
+              {% if tx.transaction_type == 'DEPOSIT' or tx.transaction_type == 'TRANSFER_IN' %}+{% else %}-{% endif %}${{ tx.amount|floatformat:2 }}
+            </td>
+            <td class="mono">${{ tx.balance_after|floatformat:2 }}</td>
+            <td style="color:var(--muted);font-size:.78rem;">{{ tx.timestamp|date:"M j, Y · H:i" }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+    <div class="empty">No transactions on this account yet.</div>
+    {% endif %}
+  </div>
+</div>
+</body>
+</html>

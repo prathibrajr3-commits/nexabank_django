@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Create Account — NexaBank</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{--bg:#040810;--panel:#070e1a;--cyan:#00ffe5;--magenta:#ff2d78;--grid:rgba(0,255,229,.04);}
+html,body{min-height:100%;background:var(--bg);}
+body{
+  font-family:'Rajdhani',sans-serif;color:#c8e0f0;
+  background-image:
+    linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size:40px 40px;
+}
+/* SCANLINE OVERLAY */
+body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.03) 2px,rgba(0,0,0,.03) 4px);pointer-events:none;z-index:0;}
+/* TOP BAR */
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:1rem 2rem;border-bottom:1px solid rgba(0,255,229,.15);position:relative;z-index:10;}
+.brand{font-family:'Share Tech Mono',monospace;font-size:1.25rem;letter-spacing:.2em;text-decoration:none;color:var(--cyan);text-shadow:0 0 20px rgba(0,255,229,.5);}
+.brand span{color:var(--magenta);text-shadow:0 0 20px rgba(255,45,120,.5);}
+.topbar-meta{font-family:'Share Tech Mono',monospace;font-size:.7rem;color:rgba(200,224,240,.3);letter-spacing:.1em;}
+.back-link{font-family:'Share Tech Mono',monospace;font-size:.7rem;color:rgba(0,255,229,.5);text-decoration:none;letter-spacing:.1em;transition:color .2s;}
+.back-link:hover{color:var(--cyan);}
+/* MAIN */
+.main{display:flex;align-items:center;justify-content:center;min-height:calc(100vh - 60px);padding:2rem;position:relative;z-index:1;}
+.register-container{width:100%;max-width:600px;}
+/* HEADER */
+.reg-header{margin-bottom:2rem;}
+.reg-eyebrow{font-family:'Share Tech Mono',monospace;font-size:.7rem;color:var(--magenta);letter-spacing:.2em;margin-bottom:.75rem;display:flex;align-items:center;gap:.75rem;}
+.reg-eyebrow::before{content:'>>>';color:var(--cyan);}
+.reg-header h1{font-size:2.5rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;line-height:1.1;}
+.reg-header h1 .c{color:var(--cyan);}
+.reg-header p{font-family:'Share Tech Mono',monospace;font-size:.75rem;color:rgba(200,224,240,.4);margin-top:.75rem;letter-spacing:.05em;}
+/* PANEL */
+.reg-panel{background:var(--panel);border:1px solid rgba(0,255,229,.2);position:relative;padding:2rem;}
+.reg-panel::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--cyan),transparent);}
+.corner{position:absolute;width:12px;height:12px;border-color:var(--cyan);border-style:solid;}
+.corner-tl{top:-1px;left:-1px;border-width:2px 0 0 2px;}
+.corner-tr{top:-1px;right:-1px;border-width:2px 2px 0 0;}
+.corner-bl{bottom:-1px;left:-1px;border-width:0 0 2px 2px;}
+.corner-br{bottom:-1px;right:-1px;border-width:0 2px 2px 0;}
+/* FORM */
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;}
+.form-group{display:flex;flex-direction:column;gap:.4rem;}
+.form-group.full{grid-column:1/-1;}
+label{font-family:'Share Tech Mono',monospace;font-size:.65rem;color:rgba(0,255,229,.7);letter-spacing:.15em;text-transform:uppercase;}
+.input-wrap{position:relative;}
+.input-prefix{position:absolute;left:.875rem;top:50%;transform:translateY(-50%);font-family:'Share Tech Mono',monospace;font-size:.75rem;color:var(--cyan);opacity:.5;}
+input{width:100%;padding:.875rem .875rem .875rem 2.25rem;background:rgba(0,255,229,.03);border:1px solid rgba(0,255,229,.15);color:#e0f0ff;font-family:'Share Tech Mono',monospace;font-size:.8rem;outline:none;transition:all .2s;letter-spacing:.04em;}
+input:focus{border-color:var(--cyan);background:rgba(0,255,229,.06);box-shadow:0 0 20px rgba(0,255,229,.08);}
+input::placeholder{color:rgba(200,224,240,.2);}
+.errors{margin-top:.35rem;}
+.errorlist{list-style:none;font-family:'Share Tech Mono',monospace;font-size:.65rem;color:var(--magenta);}
+/* SUBMIT */
+.submit-row{margin-top:1.5rem;}
+.submit-btn{width:100%;padding:1rem;background:transparent;border:1px solid var(--cyan);color:var(--cyan);font-family:'Share Tech Mono',monospace;font-size:.85rem;letter-spacing:.2em;text-transform:uppercase;cursor:pointer;transition:all .25s;position:relative;overflow:hidden;}
+.submit-btn::before{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(0,255,229,.1),transparent);transition:left .4s;}
+.submit-btn:hover{background:rgba(0,255,229,.08);box-shadow:0 0 30px rgba(0,255,229,.2);}
+.submit-btn:hover::before{left:100%;}
+.switch{margin-top:1.25rem;text-align:center;font-family:'Share Tech Mono',monospace;font-size:.72rem;color:rgba(200,224,240,.35);letter-spacing:.05em;}
+.switch a{color:var(--magenta);text-decoration:none;transition:opacity .2s;}
+.switch a:hover{opacity:.7;}
+/* FLASH */
+.flash-wrap{margin-bottom:1.25rem;}
+.flash{padding:.75rem 1rem;font-family:'Share Tech Mono',monospace;font-size:.72rem;letter-spacing:.05em;border-left:2px solid;}
+.flash-error{background:rgba(255,45,120,.06);border-color:var(--magenta);color:var(--magenta);}
+.flash-success{background:rgba(0,255,229,.06);border-color:var(--cyan);color:var(--cyan);}
+@media(max-width:580px){.form-grid{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <a class="brand" href="{% url 'home' %}">NEXA<span>BANK</span></a>
+  <div class="topbar-meta">SYS:ONLINE // SECURE CHANNEL ESTABLISHED</div>
+  <a href="{% url 'login' %}" class="back-link">← RETURN TO LOGIN</a>
+</div>
+<div class="main">
+  <div class="register-container">
+    <div class="reg-header">
+      <div class="reg-eyebrow">NEW_USER_REGISTRATION</div>
+      <h1>INIT<br><span class="c">ACCOUNT</span></h1>
+      <p>// COMPLETE FORM TO ESTABLISH SECURE BANKING PROFILE</p>
+    </div>
+    {% if messages %}
+    <div class="flash-wrap">{% for m in messages %}<div class="flash flash-{{ m.tags }}">{{ m }}</div>{% endfor %}</div>
+    {% endif %}
+    <div class="reg-panel">
+      <div class="corner corner-tl"></div><div class="corner corner-tr"></div>
+      <div class="corner corner-bl"></div><div class="corner corner-br"></div>
+      <form method="post">
+        {% csrf_token %}
+        <div class="form-grid">
+          <div class="form-group">
+            <label>First Name</label>
+            <div class="input-wrap"><span class="input-prefix">›</span><input type="text" name="first_name" placeholder="JOHN" required></div>
+          </div>
+          <div class="form-group">
+            <label>Last Name</label>
+            <div class="input-wrap"><span class="input-prefix">›</span><input type="text" name="last_name" placeholder="DOE" required></div>
+          </div>
+          <div class="form-group full">
+            <label>Email Address</label>
+            <div class="input-wrap"><span class="input-prefix">@</span><input type="email" name="email" placeholder="USER@DOMAIN.COM" required></div>
+          </div>
+          <div class="form-group full">
+            <label>Username</label>
+            <div class="input-wrap"><span class="input-prefix">#</span><input type="text" name="username" placeholder="CHOOSE_USERNAME" required></div>
+            {% if form.username.errors %}<div class="errors"><ul class="errorlist">{% for e in form.username.errors %}<li>// ERR: {{ e }}</li>{% endfor %}</ul></div>{% endif %}
+          </div>
+          <div class="form-group">
+            <label>Password</label>
+            <div class="input-wrap"><span class="input-prefix">*</span><input type="password" name="password" placeholder="••••••••" required></div>
+          </div>
+          <div class="form-group">
+            <label>Confirm Password</label>
+            <div class="input-wrap"><span class="input-prefix">*</span><input type="password" name="confirm_password" placeholder="••••••••" required></div>
+          </div>
+        </div>
+        {% if form.non_field_errors %}
+        <div class="flash flash-error" style="margin-top:1rem;">{{ form.non_field_errors.0 }}</div>
+        {% endif %}
+        <div class="submit-row">
+          <button type="submit" class="submit-btn">[ INITIALIZE ACCOUNT ]</button>
+        </div>
+      </form>
+    </div>
+    <div class="switch">ALREADY REGISTERED? <a href="{% url 'login' %}">ACCESS PORTAL →</a></div>
+  </div>
+</div>
+</body>
+</html>

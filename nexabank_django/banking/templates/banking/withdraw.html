@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Withdraw — NexaBank</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@300;400;500;600;700;800&family=Barlow+Condensed:wght@500;600;700&family=Fira+Code&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{--bg:#12100d;--s1:#1c1812;--s2:#241e16;--amber:#f5a623;--amber2:#e09420;--red:#e84040;--border:#2e2618;--b2:#3a3020;--text:#f0e8d8;--muted:#8a7860;}
+body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;min-height:100vh;}
+body::before{content:'';position:fixed;top:0;right:0;width:50%;height:100%;background:linear-gradient(135deg,transparent 60%,rgba(245,166,35,.02));pointer-events:none;}
+/* NAV */
+nav{display:flex;align-items:center;justify-content:space-between;padding:1rem 2rem;border-bottom:1px solid var(--border);background:var(--s1);}
+.brand{font-family:'Barlow Condensed',sans-serif;font-size:1.35rem;font-weight:700;letter-spacing:.08em;color:var(--amber);text-decoration:none;}
+.nav-links{display:flex;gap:.125rem;}
+.nl{padding:.45rem .875rem;border-radius:6px;color:var(--muted);text-decoration:none;font-size:.825rem;font-weight:500;transition:all .2s;}
+.nl:hover{background:var(--s2);color:var(--text);}
+.nl.active{color:var(--amber);}
+.nav-logout{background:none;border:1px solid var(--border);color:var(--muted);padding:.45rem .875rem;border-radius:6px;font-family:'Barlow',sans-serif;font-size:.825rem;cursor:pointer;transition:all .2s;}
+.nav-logout:hover{border-color:var(--amber);color:var(--amber);}
+/* PAGE */
+.page{max-width:540px;margin:0 auto;padding:3rem 1.5rem;}
+.back{display:inline-flex;align-items:center;gap:.5rem;color:var(--muted);text-decoration:none;font-size:.825rem;margin-bottom:2rem;transition:color .2s;}
+.back:hover{color:var(--text);}
+/* HEADER */
+.page-header{margin-bottom:2rem;padding-bottom:1.5rem;border-bottom:1px solid var(--border);}
+.header-tag{font-family:'Barlow Condensed',sans-serif;font-size:.8rem;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--amber);margin-bottom:.75rem;display:flex;align-items:center;gap:.625rem;}
+.header-tag::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,var(--amber),transparent);opacity:.3;}
+h1{font-family:'Barlow Condensed',sans-serif;font-size:3rem;font-weight:800;letter-spacing:-.5px;line-height:1;text-transform:uppercase;}
+.page-sub{color:var(--muted);font-size:.875rem;margin-top:.625rem;}
+/* FORM */
+.form-group{margin-bottom:1.5rem;}
+label{display:block;font-family:'Barlow Condensed',sans-serif;font-size:.75rem;font-weight:600;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-bottom:.5rem;}
+select,input{width:100%;padding:.875rem 1rem;background:var(--s1);border:1px solid var(--border);color:var(--text);font-family:'Barlow',sans-serif;font-size:.9rem;outline:none;transition:all .2s;border-radius:4px;}
+select:focus,input:focus{border-color:var(--amber);background:var(--s2);box-shadow:0 0 0 2px rgba(245,166,35,.1);}
+select option{background:var(--s1);}
+input::placeholder{color:rgba(240,232,216,.2);}
+.amt-wrap{position:relative;}
+.amt-pre{position:absolute;left:1rem;top:50%;transform:translateY(-50%);font-family:'Fira Code',monospace;font-size:1rem;color:var(--amber);font-weight:500;}
+.amt-input{padding-left:1.75rem!important;font-family:'Fira Code',monospace!important;font-size:1.2rem!important;}
+/* WARNING BOX */
+.warning-box{background:rgba(232,64,64,.07);border:1px solid rgba(232,64,64,.25);border-left:3px solid var(--red);padding:1rem 1.25rem;border-radius:4px;margin:1.5rem 0;}
+.warning-box p{font-size:.8rem;color:rgba(240,232,216,.7);line-height:1.6;}
+.warning-box strong{color:var(--red);}
+/* BALANCE INDICATOR */
+.balance-bar{background:var(--s2);border:1px solid var(--border);border-radius:4px;padding:.875rem 1rem;margin-bottom:1.5rem;display:flex;justify-content:space-between;align-items:center;}
+.bb-label{font-size:.72rem;font-family:'Barlow Condensed',sans-serif;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);}
+.bb-value{font-family:'Fira Code',monospace;font-size:1rem;color:var(--amber);}
+/* SUBMIT */
+.submit-btn{width:100%;padding:1.1rem;background:var(--red);color:var(--text);border:none;font-family:'Barlow Condensed',sans-serif;font-size:1rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;transition:all .2s;border-radius:4px;}
+.submit-btn:hover{background:#cc3030;transform:translateY(-1px);}
+/* FLASH */
+.flash{padding:.875rem 1rem;border-radius:4px;margin-bottom:1.5rem;font-size:.825rem;font-weight:500;border-left:3px solid;}
+.flash-success{background:rgba(80,200,100,.08);border-color:#50c864;color:#50c864;}
+.flash-error{background:rgba(232,64,64,.08);border-color:var(--red);color:var(--red);}
+@media(max-width:600px){nav .nav-links{display:none;}}
+</style>
+</head>
+<body>
+<nav>
+  <a class="brand" href="{% url 'dashboard' %}">NexaBank</a>
+  <div class="nav-links">
+    <a href="{% url 'dashboard' %}" class="nl">Dashboard</a>
+    <a href="{% url 'deposit' %}" class="nl">Deposit</a>
+    <a href="{% url 'withdraw' %}" class="nl active">Withdraw</a>
+    <a href="{% url 'transfer' %}" class="nl">Transfer</a>
+    <a href="{% url 'transactions' %}" class="nl">History</a>
+    <a href="{% url 'loans' %}" class="nl">Loans</a>
+  </div>
+  <form method="post" action="{% url 'logout' %}">{% csrf_token %}<button class="nav-logout">Logout</button></form>
+</nav>
+<div class="page">
+  <a href="{% url 'dashboard' %}" class="back">← Dashboard</a>
+  {% if messages %}{% for m in messages %}<div class="flash flash-{{ m.tags }}">{{ m }}</div>{% endfor %}{% endif %}
+  <div class="page-header">
+    <div class="header-tag">Cash Out</div>
+    <h1>Withdraw<br>Funds</h1>
+    <p class="page-sub">Withdraw cash from your account securely</p>
+  </div>
+  <form method="post" id="withdrawForm">
+    {% csrf_token %}
+    <div class="form-group">
+      <label>Select Account</label>
+      <select name="account" id="accSelect" required onchange="updateBalance()">
+        <option value="">Choose an account...</option>
+        {% for acc in form.account.field.queryset %}
+        <option value="{{ acc.pk }}" data-bal="{{ acc.balance }}">{{ acc.get_account_type_display }} — {{ acc.account_number }} (${{ acc.balance|floatformat:2 }})</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="balance-bar">
+      <span class="bb-label">Available Balance</span>
+      <span class="bb-value" id="balDisp">—</span>
+    </div>
+    <div class="form-group">
+      <label>Withdrawal Amount</label>
+      <div class="amt-wrap">
+        <span class="amt-pre">$</span>
+        <input type="number" name="amount" class="amt-input" placeholder="0.00" step="0.01" min="0.01" required>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Description (Optional)</label>
+      <input type="text" name="description" placeholder="Reason for withdrawal...">
+    </div>
+    <div class="warning-box">
+      <p><strong>⚠ Please ensure</strong> you have sufficient funds. Withdrawals are processed immediately and cannot be reversed automatically.</p>
+    </div>
+    <button type="submit" class="submit-btn">⬆ Confirm Withdrawal</button>
+  </form>
+</div>
+<script>
+function updateBalance(){
+  const sel=document.getElementById('accSelect');
+  const opt=sel.options[sel.selectedIndex];
+  const bal=opt?opt.dataset.bal:'';
+  document.getElementById('balDisp').textContent=bal?'$'+parseFloat(bal).toLocaleString('en-US',{minimumFractionDigits:2}):'—';
+}
+</script>
+</body>
+</html>

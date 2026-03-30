@@ -1,0 +1,50 @@
+{% extends 'banking/base.html' %}
+{% block title %}Transfer — NexaBank{% endblock %}
+{% block content %}
+<style>
+.form-page-wrap { max-width: 520px; margin: 2rem auto; }
+.form-card { background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 2.25rem; }
+.form-page-header { margin-bottom: 1.75rem; }
+.form-page-icon { width: 50px; height: 50px; border-radius: 14px; background: rgba(0,229,255,0.08); border: 1px solid rgba(0,229,255,0.2); display: flex; align-items: center; justify-content: center; font-size: 1.35rem; margin-bottom: 1rem; }
+.form-page-header h1 { font-size: 1.5rem; font-weight: 800; }
+.form-page-header p { color: var(--muted); font-size: 0.875rem; margin-top: 0.3rem; }
+.btn-block { width: 100%; justify-content: center; padding: 13px; font-size: 0.95rem; }
+.btn-back { color: var(--muted); text-decoration: none; font-size: 0.875rem; display: inline-flex; align-items: center; gap: 6px; margin-bottom: 1.25rem; transition: color 0.2s; }
+.btn-back:hover { color: var(--text); }
+</style>
+<div class="form-page-wrap fade-up">
+    <a href="{% url 'dashboard' %}" class="btn-back">← Back to Dashboard</a>
+    <div class="form-card">
+        <div class="form-page-header">
+            <div class="form-page-icon">↔</div>
+            <h1>Transfer Funds</h1>
+            <p>Send money to any NexaBank account</p>
+        </div>
+        <form method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <label class="form-label">From Account</label>
+                <select name="from_account" class="form-control" required>
+                    <option value="">Choose source account...</option>
+                    {% for account in form.from_account.field.queryset %}
+                    <option value="{{ account.id }}">{{ account.get_account_type_display }} — {{ account.account_number }} (${{ account.balance|floatformat:2 }})</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Destination Account Number</label>
+                <input type="text" name="to_account_number" class="form-control" placeholder="e.g. 123456789012" maxlength="20" required>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Amount (USD)</label>
+                <input type="number" name="amount" class="form-control" placeholder="0.00" step="0.01" min="0.01" required>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Description (Optional)</label>
+                <input type="text" name="description" class="form-control" placeholder="e.g. Rent payment...">
+            </div>
+            <button type="submit" class="btn btn-primary btn-block">Send Transfer →</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,67 @@
+{% extends 'banking/base.html' %}
+{% block title %}Register — NexaBank{% endblock %}
+{% block content %}
+<style>
+.auth-wrap { max-width: 500px; margin: 2.5rem auto; }
+.auth-card { background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 2.5rem; }
+.auth-header { text-align: center; margin-bottom: 2rem; }
+.auth-icon { width: 56px; height: 56px; border-radius: 16px; background: linear-gradient(135deg, rgba(0,229,255,0.15), rgba(124,77,255,0.15)); border: 1px solid rgba(0,229,255,0.2); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; margin: 0 auto 1rem; }
+.auth-header h1 { font-size: 1.6rem; font-weight: 800; }
+.auth-header p { color: var(--muted); font-size: 0.875rem; margin-top: 0.4rem; }
+.auth-footer { text-align: center; margin-top: 1.5rem; color: var(--muted); font-size: 0.875rem; }
+.auth-footer a { color: var(--accent); text-decoration: none; font-weight: 600; }
+.btn-block { width: 100%; justify-content: center; padding: 13px; font-size: 0.95rem; }
+.grid-2-form { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.errorlist { color: var(--danger); font-size: 0.78rem; margin-top: 4px; padding: 0; list-style: none; }
+</style>
+<div class="auth-wrap fade-up">
+    <div class="auth-card">
+        <div class="auth-header">
+            <div class="auth-icon">🏦</div>
+            <h1>Create Account</h1>
+            <p>Open your NexaBank account for free</p>
+        </div>
+        <form method="post">
+            {% csrf_token %}
+            <div class="grid-2-form">
+                <div class="form-group">
+                    <label class="form-label">First Name</label>
+                    <input type="text" name="first_name" class="form-control" placeholder="John" required>
+                    {% if form.first_name.errors %}<ul class="errorlist">{% for e in form.first_name.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Last Name</label>
+                    <input type="text" name="last_name" class="form-control" placeholder="Doe" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Email</label>
+                <input type="email" name="email" class="form-control" placeholder="john@example.com" required>
+                {% if form.email.errors %}<ul class="errorlist">{% for e in form.email.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+            </div>
+            <div class="form-group">
+                <label class="form-label">Username</label>
+                <input type="text" name="username" class="form-control" placeholder="johndoe123" required>
+                {% if form.username.errors %}<ul class="errorlist">{% for e in form.username.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+            </div>
+            <div class="grid-2-form">
+                <div class="form-group">
+                    <label class="form-label">Password</label>
+                    <input type="password" name="password" class="form-control" placeholder="••••••••" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Confirm Password</label>
+                    <input type="password" name="confirm_password" class="form-control" placeholder="••••••••" required>
+                </div>
+            </div>
+            {% if form.non_field_errors %}
+            <div class="alert alert-error">{{ form.non_field_errors.0 }}</div>
+            {% endif %}
+            <button type="submit" class="btn btn-primary btn-block">Create Account →</button>
+        </form>
+    </div>
+    <div class="auth-footer">
+        Already have an account? <a href="{% url 'login' %}">Sign in</a>
+    </div>
+</div>
+{% endblock %}

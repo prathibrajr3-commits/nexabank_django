@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Dashboard — NexaBank</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --bg:#060b14;--s1:#0a1120;--s2:#0e1828;--s3:#121f30;
+  --border:#1c2e44;--b2:#243548;
+  --blue:#3b9eff;--green:#22d77a;--red:#ff4560;--gold:#f5c842;--purple:#a78bfa;
+  --text:#d4e4f7;--muted:#4a6a8a;--muted2:#6a8aaa;
+}
+html{height:100%;}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh;display:flex;flex-direction:column;}
+/* SIDEBAR NAV */
+.layout{display:flex;flex:1;}
+.sidebar{width:220px;flex-shrink:0;background:var(--s1);border-right:1px solid var(--border);display:flex;flex-direction:column;position:sticky;top:0;height:100vh;}
+.sb-brand{padding:1.5rem 1.25rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:.75rem;}
+.sb-logo{width:32px;height:32px;border-radius:8px;background:var(--blue);display:flex;align-items:center;justify-content:center;font-size:.9rem;font-weight:700;color:#000;flex-shrink:0;}
+.sb-name{font-family:'DM Mono',monospace;font-size:.95rem;font-weight:500;letter-spacing:.04em;}
+.sb-name span{color:var(--blue);}
+.sb-nav{flex:1;padding:1rem 0;}
+.sb-section{font-size:.6rem;font-weight:600;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);padding:.75rem 1.25rem .4rem;}
+.sb-link{display:flex;align-items:center;gap:.75rem;padding:.65rem 1.25rem;color:var(--muted2);text-decoration:none;font-size:.85rem;font-weight:500;transition:all .15s;border-left:2px solid transparent;}
+.sb-link .ico{width:18px;text-align:center;font-size:.9rem;}
+.sb-link:hover{color:var(--text);background:var(--s2);}
+.sb-link.active{color:var(--blue);background:rgba(59,158,255,.07);border-left-color:var(--blue);}
+.sb-bottom{padding:1.25rem;border-top:1px solid var(--border);}
+.sb-user{display:flex;align-items:center;gap:.75rem;margin-bottom:.875rem;}
+.sb-avatar{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--purple),var(--blue));display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:600;color:#fff;flex-shrink:0;}
+.sb-user-info{flex:1;min-width:0;}
+.sb-user-name{font-size:.8rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.sb-user-role{font-size:.68rem;color:var(--muted2);}
+.logout-btn{width:100%;padding:.6rem;background:rgba(255,69,96,.08);border:1px solid rgba(255,69,96,.2);color:var(--red);font-family:'DM Sans',sans-serif;font-size:.75rem;font-weight:500;cursor:pointer;border-radius:6px;transition:all .2s;}
+.logout-btn:hover{background:rgba(255,69,96,.15);}
+/* MAIN CONTENT */
+.main{flex:1;overflow-y:auto;}
+/* TOPBAR */
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:1rem 1.75rem;border-bottom:1px solid var(--border);background:var(--s1);position:sticky;top:0;z-index:50;}
+.topbar-title{font-size:1rem;font-weight:600;}
+.topbar-sub{font-size:.75rem;color:var(--muted2);margin-top:1px;}
+.topbar-actions{display:flex;gap:.625rem;}
+.btn{display:inline-flex;align-items:center;gap:.5rem;padding:.55rem 1rem;border-radius:7px;font-family:'DM Sans',sans-serif;font-size:.78rem;font-weight:600;cursor:pointer;text-decoration:none;border:none;transition:all .2s;}
+.btn-primary{background:var(--blue);color:#000;}
+.btn-primary:hover{background:#5eaeff;transform:translateY(-1px);}
+.btn-outline{background:transparent;color:var(--text);border:1px solid var(--border);}
+.btn-outline:hover{background:var(--s2);border-color:var(--b2);}
+/* PAGE BODY */
+.page-body{padding:1.5rem 1.75rem;}
+/* FLASH */
+.flash{padding:.75rem 1rem;border-radius:7px;margin-bottom:1.25rem;font-size:.825rem;font-weight:500;display:flex;align-items:center;gap:.625rem;border:1px solid;}
+.flash-success{background:rgba(34,215,122,.07);color:var(--green);border-color:rgba(34,215,122,.2);}
+.flash-error{background:rgba(255,69,96,.07);color:var(--red);border-color:rgba(255,69,96,.2);}
+/* KPI */
+.kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:1.25rem;}
+.kpi{background:var(--s1);border:1px solid var(--border);border-radius:10px;padding:1.1rem 1.25rem;position:relative;overflow:hidden;transition:border-color .2s;}
+.kpi:hover{border-color:var(--b2);}
+.kpi-accent{position:absolute;top:0;left:0;right:0;height:2px;}
+.kpi-label{font-size:.68rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted2);margin-bottom:.6rem;}
+.kpi-val{font-family:'DM Mono',monospace;font-size:1.5rem;font-weight:500;letter-spacing:-.5px;}
+.kpi-sub{font-size:.7rem;color:var(--muted);margin-top:.3rem;}
+.kv-blue{color:var(--blue);}
+.kv-green{color:var(--green);}
+.kv-gold{color:var(--gold);}
+.kv-red{color:var(--red);}
+/* GRID */
+.dash-grid{display:grid;grid-template-columns:1.55fr 1fr;gap:1.25rem;}
+/* CARD */
+.card{background:var(--s1);border:1px solid var(--border);border-radius:10px;}
+.card-head{display:flex;align-items:center;justify-content:space-between;padding:.875rem 1.25rem;border-bottom:1px solid var(--border);}
+.card-title{font-size:.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted2);}
+.card-body{padding:.5rem 0;}
+.mb{margin-bottom:1.25rem;}
+/* ACC ROW */
+.acc-row{display:flex;align-items:center;justify-content:space-between;padding:.75rem 1.25rem;border-bottom:1px solid rgba(28,46,68,.5);transition:background .15s;text-decoration:none;color:inherit;}
+.acc-row:last-child{border-bottom:none;}
+.acc-row:hover{background:var(--s2);}
+.acc-ic{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:.85rem;flex-shrink:0;}
+.acc-ic.sav{background:rgba(59,158,255,.1);}
+.acc-ic.chk{background:rgba(167,139,250,.1);}
+.acc-ic.fix{background:rgba(245,200,66,.1);}
+.acc-info{margin-left:.875rem;flex:1;}
+.acc-name{font-size:.825rem;font-weight:600;}
+.acc-num{font-family:'DM Mono',monospace;font-size:.65rem;color:var(--muted2);margin-top:2px;}
+.acc-bal{font-family:'DM Mono',monospace;font-size:.875rem;font-weight:500;}
+/* TX ROW */
+.tx-row{display:flex;align-items:center;justify-content:space-between;padding:.7rem 1.25rem;border-bottom:1px solid rgba(28,46,68,.4);}
+.tx-row:last-child{border-bottom:none;}
+.tx-ic{width:28px;height:28px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:.75rem;flex-shrink:0;}
+.tx-in{background:rgba(34,215,122,.1);}
+.tx-out{background:rgba(255,69,96,.08);}
+.tx-info{margin-left:.75rem;flex:1;}
+.tx-desc{font-size:.78rem;font-weight:600;}
+.tx-meta{font-size:.65rem;color:var(--muted2);margin-top:1px;}
+.tx-amt{font-family:'DM Mono',monospace;font-size:.82rem;font-weight:500;}
+.pos{color:var(--green);}
+.neg{color:var(--red);}
+/* BADGE */
+.badge{padding:2px 8px;border-radius:20px;font-size:.6rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;}
+.bg{background:rgba(34,215,122,.1);color:var(--green);border:1px solid rgba(34,215,122,.2);}
+.br{background:rgba(255,69,96,.1);color:var(--red);border:1px solid rgba(255,69,96,.2);}
+.by{background:rgba(245,200,66,.1);color:var(--gold);border:1px solid rgba(245,200,66,.2);}
+/* QUICK ACTIONS */
+.qa-grid{display:grid;grid-template-columns:1fr 1fr;gap:.5rem;padding:.875rem 1rem;}
+.qa{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:.875rem .5rem;background:var(--s2);border:1px solid var(--border);border-radius:8px;text-decoration:none;color:var(--muted2);font-size:.7rem;font-weight:600;gap:5px;transition:all .2s;letter-spacing:.03em;text-transform:uppercase;}
+.qa:hover{border-color:var(--blue);color:var(--blue);background:rgba(59,158,255,.05);}
+.qa span:first-child{font-size:1.1rem;}
+/* LOAN MINI */
+.loan-mini{padding:.8rem 1.25rem;border-bottom:1px solid rgba(28,46,68,.4);}
+.loan-mini:last-child{border-bottom:none;}
+.lm-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:.3rem;}
+.lm-name{font-size:.8rem;font-weight:600;}
+.lm-detail{font-family:'DM Mono',monospace;font-size:.68rem;color:var(--muted2);}
+/* EMPTY */
+.empty{padding:2rem 1.25rem;text-align:center;color:var(--muted);font-size:.8rem;}
+@media(max-width:1000px){.sidebar{display:none;}.kpi-row{grid-template-columns:repeat(2,1fr);}.dash-grid{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+<div class="layout">
+  <aside class="sidebar">
+    <div class="sb-brand">
+      <div class="sb-logo">N</div>
+      <div class="sb-name">Nexa<span>Bank</span></div>
+    </div>
+    <nav class="sb-nav">
+      <div class="sb-section">Banking</div>
+      <a href="{% url 'dashboard' %}" class="sb-link active"><span class="ico">⊞</span> Dashboard</a>
+      <a href="{% url 'deposit' %}" class="sb-link"><span class="ico">⬇</span> Deposit</a>
+      <a href="{% url 'withdraw' %}" class="sb-link"><span class="ico">⬆</span> Withdraw</a>
+      <a href="{% url 'transfer' %}" class="sb-link"><span class="ico">↔</span> Transfer</a>
+      <div class="sb-section">Reports</div>
+      <a href="{% url 'transactions' %}" class="sb-link"><span class="ico">≡</span> History</a>
+      <a href="{% url 'loans' %}" class="sb-link"><span class="ico">◈</span> Loans</a>
+      <div class="sb-section">Account</div>
+      <a href="{% url 'new_account' %}" class="sb-link"><span class="ico">+</span> New Account</a>
+    </nav>
+    <div class="sb-bottom">
+      <div class="sb-user">
+        <div class="sb-avatar">{{ user.first_name.0 }}{{ user.last_name.0 }}</div>
+        <div class="sb-user-info">
+          <div class="sb-user-name">{{ user.first_name }} {{ user.last_name }}</div>
+          <div class="sb-user-role">Member</div>
+        </div>
+      </div>
+      <form method="post" action="{% url 'logout' %}">{% csrf_token %}<button type="submit" class="logout-btn">Sign Out</button></form>
+    </div>
+  </aside>
+  <div class="main">
+    <div class="topbar">
+      <div>
+        <div class="topbar-title">Good day, {{ user.first_name }} 👋</div>
+        <div class="topbar-sub">Your financial command center</div>
+      </div>
+      <div class="topbar-actions">
+        <a href="{% url 'new_account' %}" class="btn btn-outline">+ Account</a>
+        <a href="{% url 'deposit' %}" class="btn btn-primary">Deposit →</a>
+      </div>
+    </div>
+    <div class="page-body">
+      {% if messages %}{% for m in messages %}<div class="flash flash-{{ m.tags }}">{% if m.tags == 'success' %}✓{% else %}✕{% endif %} {{ m }}</div>{% endfor %}{% endif %}
+      <div class="kpi-row">
+        <div class="kpi"><div class="kpi-accent" style="background:var(--blue);"></div><div class="kpi-label">Total Balance</div><div class="kpi-val kv-blue">${{ total_balance|floatformat:2 }}</div><div class="kpi-sub">Across all accounts</div></div>
+        <div class="kpi"><div class="kpi-accent" style="background:var(--green);"></div><div class="kpi-label">Accounts</div><div class="kpi-val kv-green">{{ accounts.count }}</div><div class="kpi-sub">Active accounts</div></div>
+        <div class="kpi"><div class="kpi-accent" style="background:var(--gold);"></div><div class="kpi-label">Active Loans</div><div class="kpi-val kv-gold">{{ active_loans.count }}</div><div class="kpi-sub">Loan accounts</div></div>
+        <div class="kpi"><div class="kpi-accent" style="background:var(--red);"></div><div class="kpi-label">Outstanding</div><div class="kpi-val kv-red">${{ total_loan|floatformat:2 }}</div><div class="kpi-sub">Total owed</div></div>
+      </div>
+      <div class="dash-grid">
+        <div>
+          <div class="card mb">
+            <div class="card-head"><span class="card-title">My Accounts</span><a href="{% url 'new_account' %}" class="btn btn-outline" style="padding:4px 10px;font-size:.7rem;">+ Add</a></div>
+            <div class="card-body">
+              {% for acc in accounts %}
+              <a href="{% url 'account_detail' acc.pk %}" class="acc-row">
+                <div class="acc-ic {% if acc.account_type == 'SAVINGS' %}sav{% elif acc.account_type == 'CHECKING' %}chk{% else %}fix{% endif %}">
+                  {% if acc.account_type == 'SAVINGS' %}💰{% elif acc.account_type == 'CHECKING' %}💳{% else %}📈{% endif %}
+                </div>
+                <div class="acc-info"><div class="acc-name">{{ acc.get_account_type_display }}</div><div class="acc-num">{{ acc.account_number }}</div></div>
+                <div style="text-align:right;">
+                  <div class="acc-bal">${{ acc.balance|floatformat:2 }}</div>
+                  <span class="badge {% if acc.status == 'ACTIVE' %}bg{% else %}br{% endif %}" style="margin-top:3px;display:inline-block;">{{ acc.status }}</span>
+                </div>
+              </a>
+              {% empty %}<div class="empty">No accounts yet</div>{% endfor %}
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-head"><span class="card-title">Recent Activity</span><a href="{% url 'transactions' %}" class="btn btn-outline" style="padding:4px 10px;font-size:.7rem;">View All</a></div>
+            <div class="card-body">
+              {% for tx in recent_txs %}
+              {% with is_in=tx.transaction_type|slice:":8" %}
+              <div class="tx-row">
+                <div class="tx-ic {% if tx.transaction_type == 'DEPOSIT' or tx.transaction_type == 'TRANSFER_IN' %}tx-in{% else %}tx-out{% endif %}">
+                  {% if tx.transaction_type == 'DEPOSIT' %}⬇{% elif tx.transaction_type == 'WITHDRAWAL' %}⬆{% elif tx.transaction_type == 'TRANSFER_IN' %}↙{% else %}↗{% endif %}
+                </div>
+                <div class="tx-info"><div class="tx-desc">{{ tx.description|default:tx.get_transaction_type_display }}</div><div class="tx-meta">{{ tx.timestamp|date:"M j, Y" }} · {{ tx.account.account_number }}</div></div>
+                <div class="tx-amt {% if tx.transaction_type == 'DEPOSIT' or tx.transaction_type == 'TRANSFER_IN' %}pos{% else %}neg{% endif %}">
+                  {% if tx.transaction_type == 'DEPOSIT' or tx.transaction_type == 'TRANSFER_IN' %}+{% else %}-{% endif %}${{ tx.amount|floatformat:2 }}
+                </div>
+              </div>
+              {% endwith %}
+              {% empty %}<div class="empty">No transactions yet</div>{% endfor %}
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="card mb">
+            <div class="card-head"><span class="card-title">Quick Actions</span></div>
+            <div class="qa-grid">
+              <a href="{% url 'deposit' %}" class="qa"><span>⬇</span>Deposit</a>
+              <a href="{% url 'withdraw' %}" class="qa"><span>⬆</span>Withdraw</a>
+              <a href="{% url 'transfer' %}" class="qa"><span>↔</span>Transfer</a>
+              <a href="{% url 'apply_loan' %}" class="qa"><span>💼</span>Loan</a>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-head"><span class="card-title">Active Loans</span><a href="{% url 'loans' %}" class="btn btn-outline" style="padding:4px 10px;font-size:.7rem;">All</a></div>
+            <div class="card-body">
+              {% for loan in active_loans %}
+              <div class="loan-mini">
+                <div class="lm-top"><span class="lm-name">{{ loan.get_loan_type_display }} Loan</span><span class="badge by">{{ loan.status }}</span></div>
+                <div class="lm-detail">Outstanding: <span style="color:var(--red);">${{ loan.outstanding_amount|floatformat:2 }}</span> · EMI: ${{ loan.monthly_payment|floatformat:2 }}/mo</div>
+              </div>
+              {% empty %}<div class="empty">No active loans</div>{% endfor %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Transfer — NexaBank</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Lato:wght@300;400;700&family=Courier+Prime&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{--navy:#0d1b35;--cream:#f8f3e8;--gold:#c9a84c;--gold2:#a8882e;--border:#e0d5b8;--border-dark:rgba(201,168,76,.25);--text:#0d1b35;--muted:#6a7a8a;}
+body{background:var(--cream);color:var(--text);font-family:'Lato',sans-serif;min-height:100vh;}
+/* DECO PATTERN */
+body::before{content:'';position:fixed;inset:0;background-image:radial-gradient(circle at 1px 1px, rgba(201,168,76,.08) 1px, transparent 0);background-size:28px 28px;pointer-events:none;}
+/* NAV */
+nav{display:flex;align-items:center;justify-content:space-between;padding:1rem 2.5rem;background:var(--navy);border-bottom:3px solid var(--gold);}
+.brand{font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:700;color:var(--cream);text-decoration:none;letter-spacing:.05em;}
+.brand em{color:var(--gold);font-style:italic;}
+.nav-links{display:flex;gap:.5rem;}
+.nl{padding:.4rem .875rem;color:rgba(248,243,232,.5);text-decoration:none;font-size:.8rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;transition:color .2s;}
+.nl:hover,.nl.active{color:var(--gold);}
+.nav-logout{background:transparent;border:1px solid rgba(201,168,76,.4);color:rgba(248,243,232,.6);padding:.4rem .875rem;font-family:'Lato',sans-serif;font-size:.8rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;transition:all .2s;}
+.nav-logout:hover{border-color:var(--gold);color:var(--gold);}
+/* PAGE */
+.page{max-width:760px;margin:3rem auto;padding:0 1.5rem;}
+/* DECO HEADER */
+.deco-header{text-align:center;margin-bottom:3rem;}
+.deco-rule{display:flex;align-items:center;gap:1rem;margin-bottom:1.25rem;}
+.deco-rule::before,.deco-rule::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);}
+.deco-rule span{font-family:'Playfair Display',serif;font-size:.75rem;color:var(--gold);letter-spacing:.2em;text-transform:uppercase;}
+h1{font-family:'Playfair Display',serif;font-size:2.75rem;font-weight:700;letter-spacing:-.5px;margin-bottom:.5rem;}
+.deco-sub{color:var(--muted);font-size:.9rem;font-weight:300;}
+/* FORM CARD */
+.form-card{background:white;border:1px solid var(--border);padding:2.5rem;position:relative;}
+.form-card::before,.form-card::after{content:'◆';position:absolute;font-size:.5rem;color:var(--gold);}
+.form-card::before{top:.5rem;left:.5rem;}
+.form-card::after{bottom:.5rem;right:.5rem;}
+.corner-deco{position:absolute;width:20px;height:20px;}
+.cd-tl{top:0;left:0;border-top:2px solid var(--gold);border-left:2px solid var(--gold);}
+.cd-tr{top:0;right:0;border-top:2px solid var(--gold);border-right:2px solid var(--gold);}
+.cd-bl{bottom:0;left:0;border-bottom:2px solid var(--gold);border-left:2px solid var(--gold);}
+.cd-br{bottom:0;right:0;border-bottom:2px solid var(--gold);border-right:2px solid var(--gold);}
+/* SPLIT FORM */
+.split{display:grid;grid-template-columns:1fr 60px 1fr;align-items:start;gap:1rem;margin-bottom:2rem;}
+.split-center{display:flex;align-items:center;justify-content:center;padding-top:2.75rem;}
+.transfer-arrow{width:44px;height:44px;border-radius:50%;background:var(--navy);color:var(--gold);display:flex;align-items:center;justify-content:center;font-size:1.1rem;border:2px solid var(--gold);}
+.side-label{font-family:'Playfair Display',serif;font-size:.8rem;font-style:italic;color:var(--gold);letter-spacing:.08em;margin-bottom:1.25rem;text-align:center;text-transform:uppercase;}
+.form-group{margin-bottom:1.25rem;}
+label{display:block;font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:.5rem;}
+select,input{width:100%;padding:.875rem 1rem;border:1px solid var(--border);background:var(--cream);color:var(--text);font-family:'Lato',sans-serif;font-size:.9rem;outline:none;transition:all .25s;}
+select:focus,input:focus{border-color:var(--gold);box-shadow:0 0 0 2px rgba(201,168,76,.15);}
+select option{background:white;}
+input::placeholder{color:rgba(13,27,53,.3);}
+.amt-section{border-top:1px solid var(--border);padding-top:1.75rem;margin-top:.5rem;}
+.amt-section-label{font-family:'Playfair Display',serif;font-size:.8rem;font-style:italic;color:var(--gold);text-align:center;letter-spacing:.06em;text-transform:uppercase;margin-bottom:1.25rem;}
+.amt-wrap{position:relative;max-width:260px;margin:0 auto;}
+.amt-pre{position:absolute;left:1rem;top:50%;transform:translateY(-50%);font-family:'Courier Prime',monospace;font-size:1.1rem;color:var(--muted);}
+.amt-input{text-align:center;padding-left:2rem!important;font-family:'Courier Prime',monospace!important;font-size:1.4rem!important;border-bottom-width:2px;}
+/* CONFIRM BOX */
+.confirm-box{border:1px solid var(--border-dark);background:rgba(201,168,76,.04);padding:1.25rem;margin:1.75rem 0;text-align:center;}
+.confirm-amount{font-family:'Playfair Display',serif;font-size:2rem;color:var(--navy);font-weight:700;}
+.confirm-label{font-size:.72rem;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-top:.25rem;}
+/* SUBMIT */
+.submit-row{text-align:center;}
+.submit-btn{padding:1rem 3rem;background:var(--navy);color:var(--cream);border:none;font-family:'Lato',sans-serif;font-size:.85rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;cursor:pointer;transition:all .2s;position:relative;}
+.submit-btn::before,.submit-btn::after{content:'◆';margin:0 .75rem;font-size:.5rem;color:var(--gold);vertical-align:middle;}
+.submit-btn:hover{background:var(--gold2);transform:translateY(-1px);}
+/* FLASH */
+.flash{padding:.875rem 1.25rem;margin-bottom:1.5rem;border:1px solid;font-size:.825rem;font-weight:400;text-align:center;letter-spacing:.04em;}
+.flash-success{background:rgba(50,150,80,.06);border-color:rgba(50,150,80,.3);color:#2a7840;}
+.flash-error{background:rgba(180,40,40,.05);border-color:rgba(180,40,40,.25);color:#b42828;}
+.back{display:inline-flex;align-items:center;gap:.5rem;color:var(--muted);text-decoration:none;font-size:.8rem;margin-bottom:1.5rem;letter-spacing:.04em;}
+.back:hover{color:var(--gold2);}
+@media(max-width:640px){.split{grid-template-columns:1fr;}.split-center{display:none;}}
+</style>
+</head>
+<body>
+<nav>
+  <a class="brand" href="{% url 'dashboard' %}">Nexa<em>Bank</em></a>
+  <div class="nav-links">
+    <a href="{% url 'dashboard' %}" class="nl">Dashboard</a>
+    <a href="{% url 'deposit' %}" class="nl">Deposit</a>
+    <a href="{% url 'withdraw' %}" class="nl">Withdraw</a>
+    <a href="{% url 'transfer' %}" class="nl active">Transfer</a>
+    <a href="{% url 'transactions' %}" class="nl">History</a>
+    <a href="{% url 'loans' %}" class="nl">Loans</a>
+  </div>
+  <form method="post" action="{% url 'logout' %}">{% csrf_token %}<button class="nav-logout">Logout</button></form>
+</nav>
+<div class="page">
+  <a href="{% url 'dashboard' %}" class="back">← Return to Dashboard</a>
+  {% if messages %}{% for m in messages %}<div class="flash flash-{{ m.tags }}">{{ m }}</div>{% endfor %}{% endif %}
+  <div class="deco-header">
+    <div class="deco-rule"><span>Fund Transfer</span></div>
+    <h1>Transfer Funds</h1>
+    <p class="deco-sub">Send money to any NexaBank account, instantly</p>
+  </div>
+  <div class="form-card">
+    <div class="corner-deco cd-tl"></div><div class="corner-deco cd-tr"></div>
+    <div class="corner-deco cd-bl"></div><div class="corner-deco cd-br"></div>
+    <form method="post">
+      {% csrf_token %}
+      <div class="split">
+        <div>
+          <div class="side-label">From</div>
+          <div class="form-group">
+            <label>Source Account</label>
+            <select name="from_account" required>
+              <option value="">Select account...</option>
+              {% for acc in form.from_account.field.queryset %}
+              <option value="{{ acc.pk }}">{{ acc.get_account_type_display }} ····{{ acc.account_number|slice:"-4:" }} (${{ acc.balance|floatformat:2 }})</option>
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+        <div class="split-center"><div class="transfer-arrow">→</div></div>
+        <div>
+          <div class="side-label">To</div>
+          <div class="form-group">
+            <label>Destination Account No.</label>
+            <input type="text" name="to_account_number" placeholder="12-digit account number" maxlength="20" required>
+          </div>
+        </div>
+      </div>
+      <div class="amt-section">
+        <div class="amt-section-label">— Transfer Amount —</div>
+        <div class="form-group">
+          <div class="amt-wrap">
+            <span class="amt-pre">$</span>
+            <input type="number" name="amount" id="amtInput" class="amt-input" placeholder="0.00" step="0.01" min="0.01" required>
+          </div>
+        </div>
+        <div class="confirm-box" id="confirmBox" style="display:none;">
+          <div class="confirm-amount" id="confirmAmt">$0.00</div>
+          <div class="confirm-label">Will be transferred immediately</div>
+        </div>
+        <div class="form-group" style="max-width:400px;margin:1.25rem auto 0;">
+          <label>Reference / Description</label>
+          <input type="text" name="description" placeholder="e.g. Rent, invoice #1234...">
+        </div>
+      </div>
+      <div class="submit-row">
+        <button type="submit" class="submit-btn">Authorise Transfer</button>
+      </div>
+    </form>
+  </div>
+</div>
+<script>
+document.getElementById('amtInput').addEventListener('input',function(){
+  const v=parseFloat(this.value)||0;
+  const box=document.getElementById('confirmBox');
+  if(v>0){box.style.display='block';document.getElementById('confirmAmt').textContent='$'+v.toLocaleString('en-US',{minimumFractionDigits:2});}
+  else{box.style.display='none';}
+});
+</script>
+</body>
+</html>

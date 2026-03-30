@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}NexaBank{% endblock %}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #080c12;
+            --surface: #0d1420;
+            --surface2: #111927;
+            --border: #1e2d42;
+            --accent: #00e5ff;
+            --accent2: #7c4dff;
+            --gold: #ffd54f;
+            --danger: #ff4444;
+            --success: #00e676;
+            --text: #e8f0fe;
+            --muted: #546e7a;
+            --card-glow: 0 0 40px rgba(0,229,255,0.06);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Syne', sans-serif;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(ellipse at 20% 20%, rgba(0,229,255,0.03) 0%, transparent 50%),
+                        radial-gradient(ellipse at 80% 80%, rgba(124,77,255,0.03) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* NAVBAR */
+        nav {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(8,12,18,0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+            padding: 0 2rem;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+
+        .nav-logo {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: 800;
+            color: #000;
+        }
+
+        .nav-name {
+            font-size: 1.3rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            color: var(--text);
+        }
+
+        .nav-name span { color: var(--accent); }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--muted);
+            text-decoration: none;
+            padding: 6px 14px;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .nav-links a:hover { color: var(--text); background: var(--surface); }
+        .nav-links a.active { color: var(--accent); background: rgba(0,229,255,0.08); }
+
+        .nav-user {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .nav-avatar {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent2), var(--accent));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: white;
+        }
+
+        /* MAIN LAYOUT */
+        .main-wrap {
+            position: relative;
+            z-index: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+        }
+
+        /* CARDS */
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 1.5rem;
+            box-shadow: var(--card-glow);
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .card:hover { border-color: rgba(0,229,255,0.2); }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.25rem;
+        }
+
+        .card-title {
+            font-size: 0.875rem;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--muted);
+        }
+
+        /* BUTTONS */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-family: 'Syne', sans-serif;
+            font-size: 0.875rem;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent), #0097a7);
+            color: #000;
+        }
+
+        .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 8px 24px rgba(0,229,255,0.3); }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--accent);
+            border: 1px solid var(--border);
+        }
+
+        .btn-outline:hover { background: var(--surface2); border-color: var(--accent); }
+
+        .btn-danger { background: rgba(255,68,68,0.15); color: var(--danger); border: 1px solid rgba(255,68,68,0.3); }
+        .btn-success { background: rgba(0,230,118,0.12); color: var(--success); border: 1px solid rgba(0,230,118,0.3); }
+
+        /* FORMS */
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 0.8rem;
+            font-weight: 600;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: var(--muted);
+            margin-bottom: 0.5rem;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 14px;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            color: var(--text);
+            font-family: 'DM Mono', monospace;
+            font-size: 0.9rem;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            outline: none;
+        }
+
+        .form-control:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(0,229,255,0.1);
+        }
+
+        select.form-control { cursor: pointer; }
+        select.form-control option { background: var(--surface); }
+
+        /* BADGES */
+        .badge {
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        .badge-success { background: rgba(0,230,118,0.12); color: var(--success); border: 1px solid rgba(0,230,118,0.25); }
+        .badge-danger { background: rgba(255,68,68,0.12); color: var(--danger); border: 1px solid rgba(255,68,68,0.25); }
+        .badge-warning { background: rgba(255,213,79,0.12); color: var(--gold); border: 1px solid rgba(255,213,79,0.25); }
+        .badge-info { background: rgba(0,229,255,0.1); color: var(--accent); border: 1px solid rgba(0,229,255,0.2); }
+        .badge-muted { background: rgba(84,110,122,0.15); color: var(--muted); border: 1px solid rgba(84,110,122,0.2); }
+
+        /* ALERTS */
+        .alert {
+            padding: 12px 16px;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .alert-success { background: rgba(0,230,118,0.08); color: var(--success); border: 1px solid rgba(0,230,118,0.2); }
+        .alert-error { background: rgba(255,68,68,0.08); color: var(--danger); border: 1px solid rgba(255,68,68,0.2); }
+        .alert-info { background: rgba(0,229,255,0.06); color: var(--accent); border: 1px solid rgba(0,229,255,0.15); }
+
+        /* TABLE */
+        .table-wrap { overflow-x: auto; }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead tr {
+            border-bottom: 1px solid var(--border);
+        }
+
+        th {
+            text-align: left;
+            padding: 10px 12px;
+            font-size: 0.72rem;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--muted);
+        }
+
+        td {
+            padding: 12px 12px;
+            border-bottom: 1px solid rgba(30,45,66,0.5);
+            font-size: 0.875rem;
+            font-family: 'DM Mono', monospace;
+        }
+
+        tr:hover td { background: rgba(255,255,255,0.01); }
+
+        tr:last-child td { border-bottom: none; }
+
+        /* PAGE HEADER */
+        .page-header {
+            margin-bottom: 2rem;
+        }
+
+        .page-header h1 {
+            font-size: 2rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            line-height: 1.2;
+        }
+
+        .page-header p {
+            color: var(--muted);
+            font-size: 0.9rem;
+            margin-top: 0.4rem;
+        }
+
+        /* AMOUNT COLORS */
+        .amount-pos { color: var(--success); }
+        .amount-neg { color: var(--danger); }
+
+        /* MONO TEXT */
+        .mono { font-family: 'DM Mono', monospace; }
+
+        /* GRID */
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; }
+        .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; }
+        .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.25rem; }
+
+        @media (max-width: 768px) {
+            .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+            nav { padding: 0 1rem; }
+            .nav-links { display: none; }
+            .main-wrap { padding: 1.25rem 1rem; }
+        }
+
+        /* SCROLLBAR */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: var(--bg); }
+        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--muted); }
+
+        /* FADE IN */
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(16px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .fade-up { animation: fadeUp 0.4s ease forwards; }
+
+        /* Number font */
+        .big-number {
+            font-family: 'DM Mono', monospace;
+            font-size: 1.9rem;
+            font-weight: 500;
+            letter-spacing: -1px;
+        }
+
+        /* Divider */
+        .divider {
+            height: 1px;
+            background: var(--border);
+            margin: 1.25rem 0;
+        }
+    </style>
+    {% block extra_head %}{% endblock %}
+</head>
+<body>
+    <nav>
+        <a class="nav-brand" href="{% url 'home' %}">
+            <div class="nav-logo">N</div>
+            <span class="nav-name">Nexa<span>Bank</span></span>
+        </a>
+
+        {% if user.is_authenticated %}
+        <ul class="nav-links">
+            <li><a href="{% url 'dashboard' %}">Dashboard</a></li>
+            <li><a href="{% url 'deposit' %}">Deposit</a></li>
+            <li><a href="{% url 'withdraw' %}">Withdraw</a></li>
+            <li><a href="{% url 'transfer' %}">Transfer</a></li>
+            <li><a href="{% url 'transactions' %}">History</a></li>
+            <li><a href="{% url 'loans' %}">Loans</a></li>
+        </ul>
+        <div class="nav-user">
+            <div class="nav-avatar">{{ user.first_name.0 }}{{ user.last_name.0 }}</div>
+            <a href="{% url 'logout' %}" class="btn btn-outline" style="padding: 6px 14px; font-size:0.8rem;">Logout</a>
+        </div>
+        {% else %}
+        <div class="nav-user">
+            <a href="{% url 'login' %}" class="btn btn-outline" style="padding:6px 14px; font-size:0.8rem;">Login</a>
+            <a href="{% url 'register' %}" class="btn btn-primary" style="padding:6px 14px; font-size:0.8rem;">Register</a>
+        </div>
+        {% endif %}
+    </nav>
+
+    <div class="main-wrap">
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-{% if message.tags == 'error' %}error{% elif message.tags == 'success' %}success{% else %}info{% endif %}">
+            {% if message.tags == 'success' %}✓{% elif message.tags == 'error' %}✕{% else %}ℹ{% endif %}
+            {{ message }}
+        </div>
+        {% endfor %}
+        {% endif %}
+
+        {% block content %}{% endblock %}
+    </div>
+
+    <script>
+        // Auto-dismiss alerts
+        setTimeout(() => {
+            document.querySelectorAll('.alert').forEach(el => {
+                el.style.transition = 'opacity 0.5s';
+                el.style.opacity = '0';
+                setTimeout(() => el.remove(), 500);
+            });
+        }, 4000);
+    </script>
+</body>
+</html>

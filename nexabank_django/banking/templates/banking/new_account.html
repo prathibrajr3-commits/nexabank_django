@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Open Account — NexaBank</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{--bg:#f7f5ff;--white:#ffffff;--ink:#12102a;--purple:#5b4fcf;--border:#e2deff;--muted:#8a85b0;}
+body{background:var(--bg);color:var(--ink);font-family:'Instrument Sans',sans-serif;min-height:100vh;}
+nav{display:flex;align-items:center;justify-content:space-between;padding:1rem 2rem;background:white;border-bottom:1px solid var(--border);}
+.brand{font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:800;color:var(--purple);text-decoration:none;}
+.nav-links{display:flex;gap:.125rem;}
+.nl{padding:.4rem .75rem;border-radius:8px;color:var(--muted);text-decoration:none;font-size:.82rem;font-weight:500;transition:all .2s;}
+.nl:hover{background:var(--border);color:var(--ink);}
+.logout-btn{background:none;border:1px solid var(--border);color:var(--muted);padding:.4rem .875rem;border-radius:8px;font-family:'Instrument Sans',sans-serif;font-size:.82rem;cursor:pointer;}
+.page{max-width:640px;margin:3rem auto;padding:0 1.5rem;}
+.back{display:inline-flex;align-items:center;gap:.5rem;color:var(--muted);text-decoration:none;font-size:.825rem;margin-bottom:1.5rem;}
+.back:hover{color:var(--purple);}
+.header{text-align:center;margin-bottom:2.5rem;}
+.header h1{font-family:'Syne',sans-serif;font-size:2.25rem;font-weight:800;letter-spacing:-.5px;margin-bottom:.5rem;}
+.header p{color:var(--muted);font-size:.9rem;}
+.type-grid{display:grid;gap:1rem;margin-bottom:2rem;}
+.type-card{background:var(--white);border:2px solid var(--border);border-radius:20px;padding:2rem;cursor:pointer;transition:all .25s;display:flex;align-items:center;gap:1.5rem;position:relative;}
+.type-card input[type=radio]{position:absolute;opacity:0;pointer-events:none;}
+.type-card:hover{border-color:#b0a0ff;transform:translateX(4px);}
+.type-card.selected{border-color:var(--purple);background:#faf8ff;transform:translateX(4px);box-shadow:0 4px 24px rgba(91,79,207,.12);}
+.type-card.selected::after{content:'✓';position:absolute;top:1.25rem;right:1.25rem;width:28px;height:28px;border-radius:50%;background:var(--purple);color:white;display:flex;align-items:center;justify-content:center;font-size:.85rem;font-weight:700;}
+.tc-icon{width:60px;height:60px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:1.75rem;flex-shrink:0;}
+.tc-savings .tc-icon{background:rgba(59,130,246,.1);}
+.tc-checking .tc-icon{background:rgba(139,92,246,.1);}
+.tc-fixed .tc-icon{background:rgba(245,158,11,.1);}
+.tc-info{}
+.tc-name{font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:700;margin-bottom:.3rem;}
+.tc-desc{font-size:.825rem;color:var(--muted);line-height:1.5;}
+.tc-badge{display:inline-flex;align-items:center;gap:.35rem;background:var(--bg);border:1px solid var(--border);padding:2px 10px;border-radius:20px;font-size:.68rem;font-weight:600;color:var(--muted);margin-top:.5rem;}
+.submit-btn{width:100%;padding:1rem;border:none;border-radius:14px;background:var(--purple);color:white;font-family:'Syne',sans-serif;font-size:.95rem;font-weight:700;cursor:pointer;transition:all .25s;letter-spacing:-.2px;}
+.submit-btn:hover{background:#4a3fbe;transform:translateY(-2px);box-shadow:0 10px 28px rgba(91,79,207,.25);}
+.flash{padding:.875rem 1.1rem;border-radius:12px;margin-bottom:1.5rem;font-size:.825rem;border:1px solid;}
+.flash-success{background:rgba(34,197,94,.08);color:#16a34a;border-color:rgba(34,197,94,.25);}
+.flash-error{background:rgba(239,68,68,.08);color:#dc2626;border-color:rgba(239,68,68,.2);}
+@media(max-width:600px){nav .nav-links{display:none;}}
+</style>
+</head>
+<body>
+<nav>
+  <a class="brand" href="{% url 'dashboard' %}">NexaBank</a>
+  <div class="nav-links">
+    <a href="{% url 'dashboard' %}" class="nl">Dashboard</a>
+    <a href="{% url 'transactions' %}" class="nl">History</a>
+    <a href="{% url 'loans' %}" class="nl">Loans</a>
+  </div>
+  <form method="post" action="{% url 'logout' %}">{% csrf_token %}<button class="logout-btn">Logout</button></form>
+</nav>
+<div class="page">
+  <a href="{% url 'dashboard' %}" class="back">← Dashboard</a>
+  {% if messages %}{% for m in messages %}<div class="flash flash-{{ m.tags }}">{{ m }}</div>{% endfor %}{% endif %}
+  <div class="header">
+    <h1>Open a New Account</h1>
+    <p>Choose the type of account you'd like to open</p>
+  </div>
+  <form method="post">
+    {% csrf_token %}
+    <div class="type-grid">
+      <label class="type-card tc-savings" onclick="selectType(this)">
+        <input type="radio" name="account_type" value="SAVINGS" required>
+        <div class="tc-icon">💰</div>
+        <div class="tc-info">
+          <div class="tc-name">Savings Account</div>
+          <div class="tc-desc">Earn interest on your deposits. Best for building long-term financial goals.</div>
+          <div class="tc-badge">🔵 Most Popular</div>
+        </div>
+      </label>
+      <label class="type-card tc-checking" onclick="selectType(this)">
+        <input type="radio" name="account_type" value="CHECKING">
+        <div class="tc-icon">💳</div>
+        <div class="tc-info">
+          <div class="tc-name">Checking Account</div>
+          <div class="tc-desc">For everyday transactions. Instant access to funds, no limits on withdrawals.</div>
+          <div class="tc-badge">⚡ Everyday Banking</div>
+        </div>
+      </label>
+      <label class="type-card tc-fixed" onclick="selectType(this)">
+        <input type="radio" name="account_type" value="FIXED">
+        <div class="tc-icon">📈</div>
+        <div class="tc-info">
+          <div class="tc-name">Fixed Deposit</div>
+          <div class="tc-desc">Lock in funds for a higher interest rate. Ideal for medium-term savings goals.</div>
+          <div class="tc-badge">📊 High Returns</div>
+        </div>
+      </label>
+    </div>
+    <button type="submit" class="submit-btn">Open Account →</button>
+  </form>
+</div>
+<script>
+function selectType(el){
+  document.querySelectorAll('.type-card').forEach(c=>c.classList.remove('selected'));
+  el.classList.add('selected');
+  el.querySelector('input[type=radio]').checked=true;
+}
+</script>
+</body>
+</html>

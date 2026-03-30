@@ -1,0 +1,57 @@
+{% extends 'banking/base.html' %}
+{% block title %}Loans — NexaBank{% endblock %}
+{% block content %}
+<div class="page-header fade-up" style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:1rem;">
+    <div>
+        <h1>My Loans</h1>
+        <p>Track all your loan applications and repayments</p>
+    </div>
+    <a href="{% url 'apply_loan' %}" class="btn btn-primary">Apply for Loan</a>
+</div>
+
+<div class="card fade-up">
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Type</th>
+                    <th>Account</th>
+                    <th>Principal</th>
+                    <th>Interest Rate</th>
+                    <th>Tenure</th>
+                    <th>Monthly EMI</th>
+                    <th>Outstanding</th>
+                    <th>Status</th>
+                    <th>Applied</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for loan in loans %}
+                <tr>
+                    <td style="font-weight:600;">{{ loan.get_loan_type_display }}</td>
+                    <td style="font-size:0.8rem;color:var(--muted);">{{ loan.account.account_number }}</td>
+                    <td>${{ loan.principal_amount|floatformat:2 }}</td>
+                    <td>{{ loan.interest_rate }}% p.a.</td>
+                    <td>{{ loan.tenure_months }} months</td>
+                    <td style="color:var(--accent);">${{ loan.monthly_payment|floatformat:2 }}</td>
+                    <td style="color:var(--danger);">${{ loan.outstanding_amount|floatformat:2 }}</td>
+                    <td>
+                        <span class="badge
+                            {% if loan.status == 'ACTIVE' %}badge-success
+                            {% elif loan.status == 'APPROVED' %}badge-info
+                            {% elif loan.status == 'PENDING' %}badge-warning
+                            {% elif loan.status == 'REJECTED' %}badge-danger
+                            {% else %}badge-muted{% endif %}">
+                            {{ loan.status }}
+                        </span>
+                    </td>
+                    <td style="color:var(--muted);font-size:0.78rem;">{{ loan.applied_at|date:"M d, Y" }}</td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="9" style="text-align:center;padding:3rem;color:var(--muted);">No loans found. <a href="{% url 'apply_loan' %}" style="color:var(--accent);">Apply for one →</a></td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

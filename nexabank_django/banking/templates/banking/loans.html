@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>My Loans — NexaBank</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Outfit:wght@300;400;500;600&family=Space+Mono&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{--bg:#f5f2ed;--white:#fffefb;--ink:#1e1a14;--slate:#4a5568;--rust:#c0392b;--blue:#2563eb;--green:#16a34a;--gold:#d97706;--border:#e2ddd5;--accent:#1e1a14;}
+body{background:var(--bg);color:var(--ink);font-family:'Outfit',sans-serif;min-height:100vh;}
+/* NAV */
+nav{display:flex;align-items:center;justify-content:space-between;padding:1rem 2.5rem;background:var(--ink);border-bottom:4px solid var(--rust);}
+.brand{font-family:'Libre Baskerville',serif;font-size:1.2rem;font-style:italic;color:var(--bg);text-decoration:none;letter-spacing:.02em;}
+.brand strong{font-style:normal;color:white;}
+.nav-links{display:flex;gap:.125rem;}
+.nl{padding:.4rem .75rem;color:rgba(245,242,237,.4);text-decoration:none;font-size:.78rem;font-weight:500;transition:color .2s;}
+.nl:hover,.nl.active{color:var(--bg);}
+.nav-logout{background:transparent;border:1px solid rgba(245,242,237,.2);color:rgba(245,242,237,.5);padding:.4rem .875rem;font-family:'Outfit',sans-serif;font-size:.78rem;cursor:pointer;transition:all .2s;}
+.nav-logout:hover{border-color:var(--rust);color:var(--rust);}
+/* PAGE */
+.page{max-width:1040px;margin:0 auto;padding:3rem 1.5rem;}
+/* EDITORIAL HEADER */
+.ed-header{display:flex;align-items:flex-end;justify-content:space-between;padding-bottom:1.5rem;margin-bottom:2rem;border-bottom:2px solid var(--ink);}
+.ed-header-left{}
+.ed-tag{font-family:'Outfit',sans-serif;font-size:.7rem;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--rust);margin-bottom:.5rem;display:flex;align-items:center;gap:.5rem;}
+.ed-tag::before{content:'';width:1.5rem;height:1.5px;background:var(--rust);}
+h1{font-family:'Libre Baskerville',serif;font-size:3rem;font-weight:700;letter-spacing:-.5px;line-height:1;}
+.ed-issue{font-size:.7rem;color:var(--slate);font-family:'Space Mono',monospace;letter-spacing:.05em;}
+/* FLASH */
+.flash{padding:.875rem 1.25rem;margin-bottom:1.5rem;font-size:.825rem;border-left:3px solid;}
+.flash-success{background:rgba(22,163,74,.06);border-color:var(--green);color:var(--green);}
+.flash-error{background:rgba(192,57,43,.06);border-color:var(--rust);color:var(--rust);}
+/* LOANS GRID */
+.loans-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:1.5rem;margin-bottom:3rem;}
+/* LOAN CARD */
+.loan-card{background:var(--white);border:1px solid var(--border);padding:1.75rem;position:relative;transition:transform .2s,box-shadow .2s;}
+.loan-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--lc-color,var(--blue));}
+.loan-card:hover{transform:translateY(-3px);box-shadow:0 12px 40px rgba(0,0,0,.08);}
+.lc-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:1.25rem;}
+.lc-type{font-family:'Libre Baskerville',serif;font-size:1.25rem;font-weight:700;line-height:1.2;}
+.lc-sub{font-size:.72rem;color:var(--slate);margin-top:2px;font-family:'Space Mono',monospace;}
+/* STATUS */
+.status-tag{padding:3px 10px;font-size:.62rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;border-radius:2px;}
+.st-pending{background:#fef3c7;color:#92400e;}
+.st-approved,.st-active{background:#dcfce7;color:#166534;}
+.st-rejected{background:#fee2e2;color:#991b1b;}
+.st-paid{background:#f1f5f9;color:#475569;}
+/* METRICS */
+.metrics{display:grid;grid-template-columns:1fr 1fr;gap:.875rem;margin:1.25rem 0;padding:1.25rem;background:var(--bg);border:1px solid var(--border);}
+.metric-label{font-size:.62rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--slate);margin-bottom:.25rem;}
+.metric-value{font-family:'Space Mono',monospace;font-size:.95rem;font-weight:400;color:var(--ink);}
+.metric-value.em{font-size:1.05rem;color:var(--blue);}
+.metric-value.out{color:var(--rust);}
+/* PROGRESS */
+.prog-wrap{margin-top:1rem;}
+.prog-label{display:flex;justify-content:space-between;font-size:.65rem;color:var(--slate);margin-bottom:.4rem;font-family:'Space Mono',monospace;}
+.prog-bar{height:4px;background:var(--border);border-radius:0;overflow:hidden;}
+.prog-fill{height:100%;background:var(--lc-color,var(--blue));border-radius:0;}
+.prog-note{font-size:.65rem;color:var(--slate);margin-top:.4rem;text-align:right;}
+/* EMPTY */
+.empty-loans{text-align:center;padding:4rem 2rem;border:1px dashed var(--border);}
+.empty-loans h2{font-family:'Libre Baskerville',serif;font-size:1.75rem;margin-bottom:.75rem;color:var(--slate);}
+.empty-loans p{color:var(--slate);font-size:.875rem;margin-bottom:1.5rem;}
+/* CTA SECTION */
+.cta-section{background:var(--ink);padding:2.5rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1.5rem;}
+.cta-text h2{font-family:'Libre Baskerville',serif;font-size:1.5rem;color:var(--bg);margin-bottom:.4rem;}
+.cta-text p{color:rgba(245,242,237,.5);font-size:.85rem;}
+.apply-btn{padding:.875rem 2rem;background:var(--rust);color:white;border:none;font-family:'Outfit',sans-serif;font-size:.875rem;font-weight:600;cursor:pointer;text-decoration:none;transition:all .2s;letter-spacing:.02em;}
+.apply-btn:hover{background:#a93226;transform:translateY(-1px);}
+/* BACK */
+.back{display:inline-flex;align-items:center;gap:.5rem;color:var(--slate);text-decoration:none;font-size:.8rem;margin-bottom:1.5rem;}
+.back:hover{color:var(--rust);}
+@media(max-width:700px){nav .nav-links{display:none;}.ed-header{flex-direction:column;align-items:flex-start;gap:1rem;}h1{font-size:2.25rem;}}
+</style>
+</head>
+<body>
+<nav>
+  <a class="brand" href="{% url 'dashboard' %}"><strong>Nexa</strong>Bank</a>
+  <div class="nav-links">
+    <a href="{% url 'dashboard' %}" class="nl">Dashboard</a>
+    <a href="{% url 'deposit' %}" class="nl">Deposit</a>
+    <a href="{% url 'withdraw' %}" class="nl">Withdraw</a>
+    <a href="{% url 'transfer' %}" class="nl">Transfer</a>
+    <a href="{% url 'transactions' %}" class="nl">History</a>
+    <a href="{% url 'loans' %}" class="nl active">Loans</a>
+  </div>
+  <form method="post" action="{% url 'logout' %}">{% csrf_token %}<button class="nav-logout">Logout</button></form>
+</nav>
+<div class="page">
+  <a href="{% url 'dashboard' %}" class="back">← Back to Dashboard</a>
+  {% if messages %}{% for m in messages %}<div class="flash flash-{{ m.tags }}">{{ m }}</div>{% endfor %}{% endif %}
+  <div class="ed-header">
+    <div class="ed-header-left">
+      <div class="ed-tag">Financial Products</div>
+      <h1>My Loans</h1>
+    </div>
+    <div class="ed-issue">{{ loans|length }} APPLICATIONS TOTAL</div>
+  </div>
+  {% if loans %}
+  <div class="loans-grid">
+    {% for loan in loans %}
+    {% with pct=loan.outstanding_amount|stringformat:"f" %}
+    <div class="loan-card" style="--lc-color:{% if loan.loan_type == 'PERSONAL' %}#2563eb{% elif loan.loan_type == 'HOME' %}#16a34a{% elif loan.loan_type == 'CAR' %}#d97706{% else %}#7c3aed{% endif %};">
+      <div class="lc-top">
+        <div>
+          <div class="lc-type">{{ loan.get_loan_type_display }} Loan</div>
+          <div class="lc-sub">ACC: {{ loan.account.account_number }}</div>
+        </div>
+        <span class="status-tag st-{{ loan.status|lower }}">{{ loan.status }}</span>
+      </div>
+      <div class="metrics">
+        <div><div class="metric-label">Principal</div><div class="metric-value">${{ loan.principal_amount|floatformat:2 }}</div></div>
+        <div><div class="metric-label">Monthly EMI</div><div class="metric-value em">${{ loan.monthly_payment|floatformat:2 }}</div></div>
+        <div><div class="metric-label">Interest Rate</div><div class="metric-value">{{ loan.interest_rate }}% p.a.</div></div>
+        <div><div class="metric-label">Tenure</div><div class="metric-value">{{ loan.tenure_months }} mo.</div></div>
+        <div style="grid-column:1/-1;"><div class="metric-label">Outstanding</div><div class="metric-value out">${{ loan.outstanding_amount|floatformat:2 }}</div></div>
+      </div>
+      <div class="prog-wrap">
+        <div class="prog-label"><span>Repaid</span><span>Remaining</span></div>
+        <div class="prog-bar"><div class="prog-fill" style="width:0%"></div></div>
+        <div class="prog-note">Applied {{ loan.applied_at|date:"M j, Y" }}</div>
+      </div>
+    </div>
+    {% endwith %}
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="empty-loans">
+    <h2>No Loan Applications</h2>
+    <p>You haven't applied for any loans yet. Get started below.</p>
+  </div>
+  {% endif %}
+  <div class="cta-section">
+    <div class="cta-text">
+      <h2>Need financing?</h2>
+      <p>Apply for personal, home, car, or business loans. Instant EMI calculation.</p>
+    </div>
+    <a href="{% url 'apply_loan' %}" class="apply-btn">Apply for a Loan →</a>
+  </div>
+</div>
+</body>
+</html>
